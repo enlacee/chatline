@@ -1,0 +1,57 @@
+@import "../../../node_modules/bootstrap/scss/bootstrap-grid.scss";
+
+:host{
+	font-size: 1em;
+	@include media-breakpoint-down(xs) {
+		font-size: 1.1em;
+	}
+}
+h1 {
+	font-size: 1.7em;
+	text-align: center;
+	font-weight: bold;
+	@include media-breakpoint-down(xs) {
+		font-size: 1.4em;
+	}
+}
+section.login{
+	height: 90%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	div.rowed{
+		// border: 1px solid black;
+	}
+	.row {
+		padding: 0;
+		margin:0;
+	}
+	.center-label{
+		width: 100%;
+		text-align: center;
+	}
+	.form-wrap {
+		max-width: 350px;
+		margin: 0 auto;
+	}
+	.form-group {
+		margin-bottom: 1em;
+	}
+	input[type="submit"]{
+		margin-top: 2em;
+	}
+	.checkbox .label {
+		color: #6d6d6d;
+		font-size: 13px;
+		font-weight: normal;
+		margin-left: 0.8em;
+	}
+}
+
+
+.forget {
+
+	font-size: 0.9em;
+	text-align: right;
+	display: block;
+}

@@ -1,0 +1,34 @@
+<section class="container login">
+	<div class="rowed">
+		<div class="row no-gutters">
+			<div class="col-sm">
+				<h1>Sistema de Gestión de Chat en Linea</h1>
+			</div>
+		</div>
+
+		<div class="row no-gutters">
+			<div class="col-sm">
+				<div class="form-wrap">
+					<p class="text-center">Por favor ingrese su usuario y contraseña</p>
+					<form role="form" autocomplete="off" (submit)="loginUser($event)">
+						<div class="form-group">
+							<label for="email" class="center-label">Usuario</label>
+							<input type="email" class="form-control">
+						</div>
+						<div class="form-group">
+							<label for="password" class="center-label">Contraseña</label>
+							<input type="password" class="form-control">
+						</div>
+						<!-- <div class="checkbox">
+							<label><input type="checkbox" value="">Guardar sesión</label>
+						</div> -->
+						<input type="submit" class="btn btn-primary btn-lg btn-block" value="Entrar">
+					</form>
+					<a href="javascript:void(0)" class="forget pt-3" data-toggle="modal" data-target=".forget-modal">Olvidaste contraseña?</a>
+					<hr>
+				</div>
+			</div> <!-- /.col -->
+		</div> <!-- /.row -->
+	</div>
+</section>
+
