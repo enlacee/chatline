@@ -12,6 +12,7 @@
 					<div *ngIf="ShowLogin">
 						<p class="text-center">Por favor ingrese su usuario y contraseña</p>
 						<form autocomplete="off" (submit)="loginUser($event)">
+							<input *ngIf="isAdmin" type="hidden" name="is-admin"/>
 							<div class="form-group">
 								<label for="email" class="center-label">Usuario</label>
 								<input type="email" class="form-control" required/>
@@ -25,7 +26,7 @@
 							</div> -->
 							<input type="submit" class="btn btn-primary btn-lg btn-block" value="Entrar"/>
 						</form>
-						<a href="#" class="link-tab pt-3" (click)="showRecoverPass()">Olvidaste contraseña?</a>
+						<a *ngIf="!isAdmin" href="javascript:void(0)" class="link-tab pt-3" (click)="showRecoverPass()">Olvidaste contraseña?</a>
 					</div>
 					<div *ngIf="ShowRecoverPass">
 						<form autocomplete="off" (submit)="recoverPasswordUser($event)">
@@ -35,7 +36,7 @@
 							</div>
 							<input type="submit" class="btn btn-primary btn-lg btn-block" value="Enviar">
 						</form>
-						<a href="#" class="link-tab pt-3" (click)="showLogin()">Iniciar Sesión</a>
+						<a href="javascript:void(0)" class="link-tab pt-3" (click)="showLogin()">Iniciar Sesión</a>
 					</div>
 					<hr>
 				</div>
