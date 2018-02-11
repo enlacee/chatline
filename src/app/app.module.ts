@@ -13,7 +13,7 @@ import { LoginFormComponent } from './login-form/login-form.component';
 		AppComponent,
 		HeaderComponent,
 		FooterComponent,
-		LoginFormComponent
+		LoginFormComponent,
 	],
 	imports: [
 		BrowserModule

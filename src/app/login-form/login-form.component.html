@@ -9,26 +9,37 @@
 		<div class="row no-gutters">
 			<div class="col-sm">
 				<div class="form-wrap">
-					<p class="text-center">Por favor ingrese su usuario y contraseña</p>
-					<form role="form" autocomplete="off" (submit)="loginUser($event)">
-						<div class="form-group">
-							<label for="email" class="center-label">Usuario</label>
-							<input type="email" class="form-control">
-						</div>
-						<div class="form-group">
-							<label for="password" class="center-label">Contraseña</label>
-							<input type="password" class="form-control">
-						</div>
-						<!-- <div class="checkbox">
-							<label><input type="checkbox" value="">Guardar sesión</label>
-						</div> -->
-						<input type="submit" class="btn btn-primary btn-lg btn-block" value="Entrar">
-					</form>
-					<a href="javascript:void(0)" class="forget pt-3" data-toggle="modal" data-target=".forget-modal">Olvidaste contraseña?</a>
+					<div *ngIf="ShowLogin">
+						<p class="text-center">Por favor ingrese su usuario y contraseña</p>
+						<form autocomplete="off" (submit)="loginUser($event)">
+							<div class="form-group">
+								<label for="email" class="center-label">Usuario</label>
+								<input type="email" class="form-control" required/>
+							</div>
+							<div class="form-group">
+								<label for="password" class="center-label">Contraseña</label>
+								<input type="password" class="form-control" required/>
+							</div>
+							<!-- <div class="checkbox">
+								<label><input type="checkbox" value="">Guardar sesión</label>
+							</div> -->
+							<input type="submit" class="btn btn-primary btn-lg btn-block" value="Entrar"/>
+						</form>
+						<a href="#" class="link-tab pt-3" (click)="showRecoverPass()">Olvidaste contraseña?</a>
+					</div>
+					<div *ngIf="ShowRecoverPass">
+						<form autocomplete="off" (submit)="recoverPasswordUser($event)">
+							<div class="form-group">
+								<label for="email" class="center-label">Introdusca el correo electrónico</label>
+								<input type="email" class="form-control" required />
+							</div>
+							<input type="submit" class="btn btn-primary btn-lg btn-block" value="Enviar">
+						</form>
+						<a href="#" class="link-tab pt-3" (click)="showLogin()">Iniciar Sesión</a>
+					</div>
 					<hr>
 				</div>
 			</div> <!-- /.col -->
 		</div> <!-- /.row -->
 	</div>
 </section>
-

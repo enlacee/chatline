@@ -1,12 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, OnInit  } from '@angular/core';
 
 @Component({
 	selector: 'app-login-form',
 	templateUrl: './login-form.component.html',
 	styleUrls: ['./login-form.component.scss']
 })
-export class LoginFormComponent {
+export class LoginFormComponent implements OnInit {
 
+	ShowLogin:boolean;
+	ShowRecoverPass:boolean;
+
+	constructor() {
+		this.ShowLogin = true;
+		this.ShowRecoverPass = false;
+	}
+
+	ngOnInit() {
+
+	}
+
+	// login user authentication
 	loginUser(event) {
 		event.preventDefault();
 		var form = event.currentTarget;
@@ -16,5 +29,20 @@ export class LoginFormComponent {
 		console.log('data', username, password);
 
 		return false;
+	}
+
+	// recover password
+	recoverPasswordUser(event) {
+		event.preventDefault();
+	}
+
+	// function to show content
+	showLogin() {
+		this.ShowLogin = true;
+		this.ShowRecoverPass = false;
+	}
+	showRecoverPass() {
+		this.ShowLogin = false;
+		this.ShowRecoverPass = true;
 	}
 }
