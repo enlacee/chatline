@@ -12,6 +12,7 @@ import { AdminComponent } from './admin/admin.component';
 // Guard Routes
 import { AuthguardGuard } from  './authguard.guard'; // add into module for use into
 import { UserService } from './user.service';
+import { LoginFormAdminComponent } from './login-form-admin/login-form-admin.component';
 
 const appRoutes: Routes = [
 	{
@@ -22,6 +23,11 @@ const appRoutes: Routes = [
 	{
 		path: 'login',
 		component: LoginFormComponent,
+		pathMatch: 'full'
+	},
+	{
+		path: 'logina',
+		component: LoginFormAdminComponent,
 		pathMatch: 'full'
 	},
 	{
@@ -39,6 +45,7 @@ const appRoutes: Routes = [
 		FooterComponent,
 		LoginFormComponent,
 		AdminComponent,
+		LoginFormAdminComponent,
 	],
 	imports: [
 		BrowserModule,

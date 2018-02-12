@@ -21,10 +21,7 @@
 								<label for="password" class="center-label">Contraseña</label>
 								<input type="password" class="form-control" required/>
 							</div>
-							<!-- <div class="checkbox">
-								<label><input type="checkbox" value="">Guardar sesión</label>
-							</div> -->
-							<input type="submit" class="btn btn-primary btn-lg btn-block" value="Entrar"/>
+							<input type="submit" [class.btn-secondary]="isAdmin" class="btn btn-primary btn-lg btn-block" value="Entrar"/>
 						</form>
 						<a *ngIf="!isAdmin" href="javascript:void(0)" class="link-tab pt-3" (click)="showRecoverPass()">Olvidaste contraseña?</a>
 					</div>
