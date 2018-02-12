@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 import { routes } from './app.routes';
 
 
@@ -20,6 +21,8 @@ import { AdminComponent } from './admin/admin.component';
 	],
 	imports: [
 		BrowserModule,
+		// import HttpClientModule after BrowserModule.
+		HttpClientModule,
 		routes
 	],
 	providers: [],

@@ -8,6 +8,10 @@ import { LoginFormComponent } from '../login-form/login-form.component';
 })
 export class AdminComponent {
 
+	isAdminVariable:boolean;
 
+	constructor() {
+		this.isAdminVariable = true;
+	}
 
 }
