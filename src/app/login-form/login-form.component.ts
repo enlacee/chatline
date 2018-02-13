@@ -1,34 +1,69 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { UserService } from '../user.service';
+import { Subscriber } from 'rxjs/Subscriber';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-login-form',
 	templateUrl: './login-form.component.html',
-	styleUrls: ['./login-form.component.scss']
+	styleUrls: ['./login-form.component.scss'],
+	providers: [UserService]
 })
-export class LoginFormComponent implements OnInit {
+
+export class LoginFormComponent {
 
 	@Input() isAdmin: boolean;
 
-	ShowLogin:boolean;
-	ShowRecoverPass:boolean;
+	public ShowLogin:boolean;
+	public ShowRecoverPass:boolean;
+	public users;
+	public errorMessage;
 
-	constructor() {
+	constructor(private _usersService: UserService, private _router: Router) {
 		this.ShowLogin = true;
 		this.ShowRecoverPass = false;
-	}
 
-	ngOnInit() {
+		this._usersService.getUsers()
+			.subscribe(
+				result => {
+					this.users = result;
+					console.log(this.users);
+				},
+				error => {
+					this.errorMessage = <any>error;
 
+					if(this.errorMessage !== null){
+						console.log(this.errorMessage);
+						alert("Error en la petición");
+					}
+				}
+			)
 	}
 
 	// login user authentication
 	loginUser(event) {
 		event.preventDefault();
-		var form = event.currentTarget;
-		var username = form.elements[0].value;
-		var password = form.elements[1].value;
+		var form = event.target;
+		this._usersService.login(form.username.value, form.username.password)
+			.subscribe(
+				result => {
 
-		console.log('data', username, password);
+					console.log('result', result);
+					if (result.status === true) {
+						localStorage.setItem('currentUser', JSON.stringify(result));
+						this._router.navigate(['admin']);
+						// localStorage.setItem('currentUser', JSON.stringify({ token: token, name: name }));
+					}
+				},
+				error => {
+					this.errorMessage = <any>error;
+
+					if(this.errorMessage !== null){
+						console.log(this.errorMessage);
+						alert("Error en la petición");
+					}
+				}
+			)
 
 		return false;
 	}

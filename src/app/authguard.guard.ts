@@ -31,15 +31,15 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthguardGuard implements CanActivate {
-    constructor(private router: Router) {}
+	constructor(private router: Router) {}
 
-    canActivate() {
-        if (localStorage.getItem('isLoggedin')) {
-            return true;
-        }
+	canActivate() {
+		if (localStorage.getItem('currentUser')) {
+			return true;
+		}
 
-        this.router.navigate(['/logina']);
-        return false;
+		this.router.navigate(['/logina']);
+		return false;
     }
 }
 
