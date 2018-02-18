@@ -5,23 +5,27 @@ import{ Http, Response, Headers } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 
+import { VariableGlobalService } from './variable-global.service';
+
 // Permitimos que este objeto se pueda inyectar con la DI
 @Injectable()
 export class UserService {
 
-	constructor(private _http: Http) {}
+	private theData;
+
+	constructor(private _variableGlobal: VariableGlobalService, private _http: Http) {
+		this.theData = _variableGlobal.getData();
+	}
 
 	getUsers() {
-		return this._http.get('http://local.chatlineapi.com/users')
+
+		return this._http.get(this._variableGlobal.apiURL + '/users')
 			.map(res => res.json());
 	}
 
 	// authenticate basic
 	login(username: string, password: string) {
-		return this._http.post('http://local.chatlineapi.com/login', { username: username, password: password })
+		return this._http.post(this._variableGlobal.apiURL + '/users-login', { username: username, password: password })
 			.map(res => res.json());
-
-		// return this._http.post<any>('http://local.chatlineapi.com/login', { username: username, password: password })
-		// 	.map(res => res.json());
 	}
 }

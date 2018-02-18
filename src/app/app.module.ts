@@ -11,7 +11,7 @@ import { LoginFormComponent } from './login-form/login-form.component';
 import { AdminComponent } from './admin/admin.component';
 // Guard Routes
 import { AuthguardGuard } from  './authguard.guard'; // add into module for use into
-import { UserService } from './user.service';
+import { VariableGlobalService } from './variable-global.service';
 import { LoginFormAdminComponent } from './login-form-admin/login-form-admin.component';
 
 const appRoutes: Routes = [
@@ -54,7 +54,7 @@ const appRoutes: Routes = [
 		HttpModule,
 		RouterModule.forRoot(appRoutes, {useHash: false, enableTracing: true})
 	],
-	providers: [AuthguardGuard],
+	providers: [AuthguardGuard, VariableGlobalService],
 	bootstrap: [AppComponent]
 })
 export class AppModule { }
