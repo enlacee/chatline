@@ -5,21 +5,21 @@
 		</div>
 		<div class="col-2_ header-right">
 			<p class="close-red">
-				<a href="javascript:void(0)">Salir</a>
+				<a href="javascript:void(0)" (click)="logout($event)">Salir</a>
 			</p>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-12">
 			<ul class="list-tab mt-2">
-				<li><a href="javascript:void(0)">Usuarios</a></li>
-				<li><a href="javascript:void(0)">Grupos</a></li>
+				<li><a class="btn btn-link" routerLink="/admin/usuarios" routerLinkActive="active">Usuarios</a></li>
+				<li><a class="btn btn-link" routerLink="/admin/grupos" routerLinkActive="active">Grupos</a></li>
 			</ul>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-8">
-			<h2>Lista de Usuarios</h2>
+			<router-outlet></router-outlet>
 		</div>
 		<div class="col-4">
 			<h2>Mantenimiento</h2>

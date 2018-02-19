@@ -14,6 +14,8 @@ import { LoginFormAdminComponent } from './login-form-admin/login-form-admin.com
 
 // pipe
 import { HowiamPipe } from './pipe/howiam.pipe';
+import { AdminUserComponent } from './admin/admin-user.component';
+import { AdminGroupComponent } from './admin/admin-group.component';
 
 const appRoutes: Routes = [
 	{
@@ -35,7 +37,12 @@ const appRoutes: Routes = [
 		path: 'admin',
 		canActivate: [AuthguardGuard],
 		component: AdminComponent,
-		pathMatch: 'full'
+		// pathMatch: 'full',
+		children: [
+			// { path: '', redirectTo: 'usuarios', pathMatch: 'full' },
+			{ path: 'usuarios', component: AdminUserComponent },
+			{ path: 'grupos', component: AdminGroupComponent },
+		  ]
 	},
 ];
 
@@ -45,7 +52,9 @@ const appRoutes: Routes = [
 		LoginFormComponent,
 		LoginFormAdminComponent,
 		AdminComponent,
-		HowiamPipe
+		HowiamPipe,
+		AdminUserComponent,
+		AdminGroupComponent
 	],
 	imports: [
 		BrowserModule,
