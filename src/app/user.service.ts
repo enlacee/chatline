@@ -24,8 +24,8 @@ export class UserService {
 	}
 
 	// authenticate basic
-	login(username: string, password: string) {
-		return this._http.post(this._variableGlobal.apiURL + '/users-login', { username: username, password: password })
+	login(formdata) {
+		return this._http.post(this._variableGlobal.apiURL + '/users-login', formdata)
 			.map(res => res.json());
 	}
 }

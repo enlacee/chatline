@@ -44,12 +44,18 @@ export class LoginFormComponent {
 	loginUser(event) {
 		event.preventDefault();
 		var form = event.target;
-		this._usersService.login(form.username.value, form.username.password)
+		var formdat = new FormData();
+		formdat.append('username', form.username.value);
+		formdat.append('password', form.password.value);
+		if (typeof(form['is-admin']) !== 'undefined') {
+			formdat.append('is-admin', 'true');
+		}
+
+		this._usersService.login(formdat)
 			.subscribe(
 				result => {
-
 					console.log('result', result);
-					if (result.status === true) {
+					if (result) {
 						localStorage.setItem('currentUser', JSON.stringify(result));
 						this._router.navigate(['admin']);
 						// localStorage.setItem('currentUser', JSON.stringify({ token: token, name: name }));

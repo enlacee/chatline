@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { LoginFormComponent } from '../login-form/login-form.component';
+import { Component, Input } from '@angular/core';
+import { User } from '../models/user';
 
 @Component({
   selector: 'app-admin',
@@ -8,10 +8,13 @@ import { LoginFormComponent } from '../login-form/login-form.component';
 })
 export class AdminComponent {
 
-	isAdminVariable:boolean;
+	@Input() user:User;
 
 	constructor() {
-		this.isAdminVariable = true;
+
+		let data = JSON.parse(localStorage.getItem('currentUser'));
+		this.user = data;
+		console.log('this.user', this.user);
 	}
 
 }

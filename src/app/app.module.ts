@@ -5,14 +5,15 @@ import { HttpModule, JsonpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './header/header.component';
-import { FooterComponent } from './footer/footer.component';
 import { LoginFormComponent } from './login-form/login-form.component';
 import { AdminComponent } from './admin/admin.component';
 // Guard Routes
 import { AuthguardGuard } from  './authguard.guard'; // add into module for use into
 import { VariableGlobalService } from './variable-global.service';
 import { LoginFormAdminComponent } from './login-form-admin/login-form-admin.component';
+
+// pipe
+import { HowiamPipe } from './pipe/howiam.pipe';
 
 const appRoutes: Routes = [
 	{
@@ -41,18 +42,17 @@ const appRoutes: Routes = [
 @NgModule({
 	declarations: [
 		AppComponent,
-		HeaderComponent,
-		FooterComponent,
 		LoginFormComponent,
-		AdminComponent,
 		LoginFormAdminComponent,
+		AdminComponent,
+		HowiamPipe
 	],
 	imports: [
 		BrowserModule,
 		// import HttpClientModule after BrowserModule.
 		// HttpClientModule,
 		HttpModule,
-		RouterModule.forRoot(appRoutes, {useHash: false, enableTracing: true})
+		RouterModule.forRoot(appRoutes, {useHash: false/*, enableTracing: true*/})
 	],
 	providers: [AuthguardGuard, VariableGlobalService],
 	bootstrap: [AppComponent]
