@@ -1,4 +1,64 @@
 <h2>Lista de Grupos</h2>
-<p>
-  admin-group works!
-</p>
+
+<form>
+	<div class="row">
+		<div class="col">
+			<input class="form-control form-control-sm" type="text" name="inputName" [(ngModel)]="inputName"
+			placeholder="Nombre"/>
+		</div>
+		<div class="col">
+			<input type="button" class="btn btn-sm btn-primary btn-lg btn-block"  (click)="FilterByName()" value="Buscar">
+			<!-- <a href="javascript:void(0)" class="btn btn-sm btn-primary" (click)="FilterByName()">Buscar</a> -->
+		</div>
+	</div>
+</form>
+
+<div class="row">
+	<div class="col-12">
+		<!-- Default panel contents -->
+		<!-- <div class='panel-heading'>Lista de Grupos</div> -->
+		<div class='panel-body'>
+			<table class="table table-striped">
+				<thead class="thead-inverse">
+					<tr>
+						<th>Id</th>
+						<th>Nombre</th>
+						<th>Opciones</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr *ngFor="let item of items">
+						<td scope="row">{{item.id_group}}</td>
+						<td>{{item.name}}</td>
+						<td>
+							<a href="javascript:void(0)"class="btn btn-link">Editar</a>
+							<a href="javascript:void(0)" class="btn btn-link">Eliminar</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<div class="row">
+				<div class="col-12 col-sm-4">
+					<label style="margin-top:10px">Pagina {{currentIndex}}/{{pageNumber}}</label>
+				</div>
+				<div class="col-12 col-sm-8">
+					<nav class="float-sm-right">
+						<ul class="pagination">
+							<li class="page-item" [ngClass]="{'disabled': (currentIndex == 1 || pageNumber == 0)}">
+								<a class="page-link" href="javascript:void(0)" (click)="prevPage()">Previous</a>
+							</li>
+							<li *ngFor="let page of pagesIndex" [ngClass]="{'active': (currentIndex == page)}"
+								class="page-item">
+								<a class="page-link" href="javascript:void(0)" (click)="setPage(page)">{{page}}</a>
+							</li>
+							<li class="page-item" [ngClass]="{'disabled': (currentIndex == pageNumber || pageNumber == 0)}">
+								<a class="page-link" href="javascript:void(0)" (click)="nextPage()">Next</a>
+							</li>
+						</ul>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

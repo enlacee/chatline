@@ -5,11 +5,12 @@
 	// justify-content: center;
 
 	background-color: #eee;
-	height: 95vh;
+	// height: 100%;
+	// height: 95vh;
 	// padding: 0;
 }
 .the-content-footer{
-	height: 5vh;
+	// height: 5vh;
 	// padding: 0;
 }
 .row:nth-child(1){
@@ -85,5 +86,9 @@ ul.list-tab{
 	li{
 		display: inline;
 		margin-right: 1em;
+		a.active {
+			font-weight: bold;
+			text-decoration: underline;
+		}
 	}
 }
