@@ -16,7 +16,7 @@ import { LoginFormAdminComponent } from './login-form-admin/login-form-admin.com
 import { HowiamPipe } from './pipe/howiam.pipe';
 import { AdminUserComponent } from './admin/admin-user.component';
 import { AdminGroupComponent } from './admin/admin-group.component';
-import { FormsModule } from '@angular/forms' // for use ngModel
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'; // for use ngModel
 
 const appRoutes: Routes = [
 	{
@@ -63,7 +63,8 @@ const appRoutes: Routes = [
 		// HttpClientModule,
 		HttpModule,
 		RouterModule.forRoot(appRoutes, {useHash: false/*, enableTracing: true*/}),
-		FormsModule
+		FormsModule,
+		ReactiveFormsModule
 	],
 	providers: [AuthguardGuard, VariableGlobalService],
 	bootstrap: [AppComponent]
