@@ -21,7 +21,7 @@ export class AdminComponent {
 
 	logout(event){
 		event.preventDefault();
-		if (window.confirm("Esta seguro de querer salir?")) {
+		if (window.confirm("Está seguro de querer salir?")) {
 			localStorage.removeItem('currentUser');
 			this._router.navigate(['logina']);
 		}

@@ -217,16 +217,18 @@ export class AdminGroupComponent {
 	}
 	//Delete article
 	deleteArticle(articleId: string) {
-		this.preProcessConfigurations();
-		this._groupService.deleteArticleById(articleId)
-			.subscribe(successCode => {
-					//this.statusCode = successCode;
-					//Expecting success code 204 from server
-					this.statusCode = 204;
-					this.loadData(); // reFill data
-					this.backToCreateArticle();
-				},
-				errorCode => this.statusCode = errorCode);
+		if ( window.confirm("Está seguro de querer eliminar el item[" + articleId + "] ?") ) {
+			this.preProcessConfigurations();
+			this._groupService.deleteArticleById(articleId)
+				.subscribe(successCode => {
+						//this.statusCode = successCode;
+						//Expecting success code 204 from server
+						this.statusCode = 204;
+						this.loadData(); // reFill data
+						this.backToCreateArticle();
+					},
+					errorCode => this.statusCode = errorCode);
+		}
 	}
 	preProcessConfigurations() {
 		this.statusCode = null;
