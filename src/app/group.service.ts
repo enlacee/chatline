@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { Http, Response, Headers, URLSearchParams, RequestOptions } from '@angular/http';
+import { Http, Response, Headers/*, URLSearchParams*/, RequestOptions } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { Observable } from 'rxjs/Observable';
 
@@ -13,7 +13,10 @@ export class GroupService {
 	private theData;
 	private apiURL;
 
-	constructor(private _variableGlobal: VariableGlobalService, private _http: Http) {
+	constructor(
+		private _variableGlobal: VariableGlobalService,
+		private _http: Http
+	) {
 		this.theData = _variableGlobal.getData();
 		this.apiURL = this._variableGlobal.apiURL + '/groups';
 	}
