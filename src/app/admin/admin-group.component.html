@@ -1,11 +1,11 @@
-<form>
+<form (ngSubmit)="FilterByName()">
 	<div class="row no-gutters">
 		<div class="col-10">
 			<input class="form-control form-control-sm" type="text" name="inputName" [(ngModel)]="inputName"
 			placeholder="Nombre"/>
 		</div>
 		<div class="col-2">
-			<input type="button" class="btn btn-sm btn-primary btn-lg btn-block" (click)="FilterByName()" value="Buscar">
+			<input type="submit" class="btn btn-sm btn-primary btn-lg btn-block" value="Buscar"/>
 		</div>
 	</div>
 </form>
