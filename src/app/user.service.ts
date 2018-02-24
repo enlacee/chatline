@@ -30,7 +30,7 @@ export class UserService {
 
 	// Basic authenticate
 	login(formdata) {
-		return this._http.post(this.apiURL + '/users-login', formdata)
+		return this._http.post(this._variableGlobal.apiURL + '/users-login', formdata)
 			.map(res => res.json());
 	}
 
