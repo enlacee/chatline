@@ -22,22 +22,6 @@ export class LoginFormComponent {
 	constructor(private _usersService: UserService, private _router: Router) {
 		this.ShowLogin = true;
 		this.ShowRecoverPass = false;
-
-		this._usersService.getUsers()
-			.subscribe(
-				result => {
-					this.users = result;
-					console.log(this.users);
-				},
-				error => {
-					this.errorMessage = <any>error;
-
-					if(this.errorMessage !== null){
-						console.log(this.errorMessage);
-						alert("Error en la petición");
-					}
-				}
-			)
 	}
 
 	// login user authentication

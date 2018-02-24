@@ -174,7 +174,7 @@ export class AdminGroupComponent {
 	onArticleFormSubmit() {
 		this.processValidation = true;
 		if (this.articleForm.invalid) {
-			console.log("return");
+			console.log("this.articleForm.invalid", this.articleForm.invalid, 'return');
 			return; //Validation failed, exit from method.
 		}
 		//Form is valid, now perform create or update

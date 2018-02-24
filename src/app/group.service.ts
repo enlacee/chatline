@@ -10,14 +10,12 @@ import { Group } from './models/group';
 @Injectable()
 export class GroupService {
 
-	private theData;
 	private apiURL;
 
 	constructor(
 		private _variableGlobal: VariableGlobalService,
 		private _http: Http
 	) {
-		this.theData = _variableGlobal.getData();
 		this.apiURL = this._variableGlobal.apiURL + '/groups';
 	}
 
