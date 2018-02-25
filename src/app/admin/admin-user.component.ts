@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormControl/*, FormBuilder*/, Validators } from '@angular/forms';
+import { FormGroup, FormControl/*, FormBuilder*/, Validators, ValidationErrors } from '@angular/forms';
+// import { EmailValidator } from '@angular/forms';
 import { User } from '../models/user';
 import { UserService } from '../user.service'
 
 @Component({
 	selector: 'app-admin-user',
 	templateUrl: './admin-user.component.html',
-	styles: [],
+	styles: [``],
 	providers: [UserService]
 })
 export class AdminUserComponent {
@@ -16,19 +17,24 @@ export class AdminUserComponent {
 	public requestProcessing = false;
 	public articleIdToUpdate = null;
 	public processValidation = false;
+	emailPattern = "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
 	public articleForm = new FormGroup({
 		id_user: new FormControl(''),
 		firstname: new FormControl('', Validators.required),
-		// lastname: new FormControl(''),
-		// dni: new FormControl(''),
-		// username: new FormControl('', Validators.required),
-		// password: new FormControl('', Validators.required),
-		// area: new FormControl(''),
-		// cargo: new FormControl(''),
-		// chat_privado: new FormControl(''),
-		// active: new FormControl(''),
-		// id_rol: new FormControl(''),
+		lastname: new FormControl(''),
+		username: new FormControl('', [Validators.required, Validators.pattern(this.emailPattern)]),
+		password: new FormControl('', Validators.required),
+		dni: new FormControl('', [Validators.minLength(8), Validators.maxLength(8)]),
+		area: new FormControl(''),
+		cargo: new FormControl(''),
+		status: new FormControl(''),
+		chat_plus: new FormControl(''),
+		at_created: new FormControl({value: '', disabled: true}),
+		at_updated: new FormControl(''),
+		id_rol: new FormControl(''),
 	});
+	public dataAreas = ['Administracion', 'Contabilidad', 'Sistemas', 'Producccion', 'Marketing', 'Diseño', 'Ventas'];
+	public dataCargos = ['Abogado', 'Ingeniero de sistemas', 'Asistente de ventas', 'Recepcionista', 'Ensamblador', 'Fontanero', 'Carpintero'];
 
 	// others
 	filteredItems : User[];
@@ -176,6 +182,8 @@ export class AdminUserComponent {
 	// function CRUD
 	onArticleFormSubmit() {
 		this.processValidation = true;
+
+		this.getFormValidationErrors();
 		if (this.articleForm.invalid) {
 			console.log("return");
 			return; //Validation failed, exit from method.
@@ -211,10 +219,22 @@ export class AdminUserComponent {
 		this._userService.getArticleById(articleId)
 			.subscribe(article => {
 				this.articleIdToUpdate = article.id_user;
-				// fill more.................................................
+
+				console.log('article user', article);
 				this.articleForm.setValue({
 					'id_user': article.id_user,
-					'firstname': article.firstname
+					'firstname': article.firstname,
+					'lastname': article.lastname,
+					'username': article.username,
+					'password': article.password,
+					'dni': article.dni,
+					'area': article.area,
+					'cargo': article.cargo,
+					'status': article.status,
+					'chat_plus': article.chat_plus,
+					'at_created': article.at_created,
+					'at_updated': article.at_updated,
+					'id_rol': article.id_rol
 				});
 				this.processValidation = true;
 				this.requestProcessing = false;
@@ -246,4 +266,16 @@ export class AdminUserComponent {
 		this.articleForm.reset();
 		this.processValidation = false;
 	}
+
+	getFormValidationErrors() {
+		Object.keys(this.articleForm.controls).forEach(key => {
+
+		const controlErrors: ValidationErrors = this.articleForm.get(key).errors;
+		if (controlErrors != null) {
+			  Object.keys(controlErrors).forEach(keyError => {
+				console.log('Key control: ' + key + ', keyError: ' + keyError + ', err value: ', controlErrors[keyError]);
+			  });
+			}
+		  });
+		}
 }

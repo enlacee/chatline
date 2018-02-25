@@ -4,3 +4,13 @@
 
 // @import "../node_modules/patternfly/dist/css/patternfly.css";
 
+/**
+ * customs css
+ **/
+
+// fix show radio button input native
+.custom-control-input{
+	position: inherit;
+	z-index: auto;
+	opacity: 1;
+}
