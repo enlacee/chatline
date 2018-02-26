@@ -175,6 +175,7 @@
 					<label for="password" class="col-2 col-form-label">Clave</label>
 					<div class="col-12 col-sm-10">
 						<input class="form-control" formControlName="password">
+						<small class="form-text text-muted">{{ currentUserPassword }}</small>
 						<small class="form-text text-muted" *ngIf="articleForm.get('password').invalid && processValidation" [ngClass]="'error'">
 							La clave es requerido.
 						</small>

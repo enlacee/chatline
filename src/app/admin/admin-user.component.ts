@@ -17,13 +17,14 @@ export class AdminUserComponent {
 	public requestProcessing = false;
 	public articleIdToUpdate = null;
 	public processValidation = false;
+	public currentUserPassword = '';
 	emailPattern = "^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$";
 	public articleForm = new FormGroup({
 		id_user: new FormControl(''),
 		firstname: new FormControl('', Validators.required),
 		lastname: new FormControl(''),
 		username: new FormControl('', [Validators.required, Validators.pattern(this.emailPattern)]),
-		password: new FormControl('', Validators.required),
+		password: new FormControl(''),
 		dni: new FormControl('', [Validators.minLength(8), Validators.maxLength(8)]),
 		area: new FormControl(''),
 		cargo: new FormControl(''),
@@ -221,12 +222,13 @@ export class AdminUserComponent {
 				this.articleIdToUpdate = article.id_user;
 
 				console.log('article user', article);
+				this.currentUserPassword = article.password;
 				this.articleForm.setValue({
 					'id_user': article.id_user,
 					'firstname': article.firstname,
 					'lastname': article.lastname,
 					'username': article.username,
-					'password': article.password,
+					'password': '',// article.password,
 					'dni': article.dni,
 					'area': article.area,
 					'cargo': article.cargo,
@@ -265,6 +267,8 @@ export class AdminUserComponent {
 		this.articleIdToUpdate = null;
 		this.articleForm.reset();
 		this.processValidation = false;
+
+		this.currentUserPassword = '';
 	}
 
 	getFormValidationErrors() {
