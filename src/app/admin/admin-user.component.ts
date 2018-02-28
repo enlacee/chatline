@@ -1,16 +1,20 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, Component, ElementRef } from '@angular/core';
 import { FormGroup, FormControl/*, FormBuilder*/, Validators, ValidationErrors } from '@angular/forms';
 // import { EmailValidator } from '@angular/forms';
 import { User } from '../models/user';
 import { UserService } from '../user.service'
+import { GroupService } from '../group.service';
+import { GroupuserService } from '../groupuser.service';
+import { Group } from '../models/group';
+import { GroupUser } from '../models/group-user';
 
 @Component({
 	selector: 'app-admin-user',
 	templateUrl: './admin-user.component.html',
-	styles: [``],
-	providers: [UserService]
+	styleUrls: ['./admin-user.component.scss'],
+	providers: [UserService, GroupService, GroupuserService]
 })
-export class AdminUserComponent {
+export class AdminUserComponent implements OnInit {
 
 	// rest variables
 	public statusCode: number;
@@ -39,6 +43,11 @@ export class AdminUserComponent {
 
 	// others
 	filteredItems : User[];
+	groupsItems : Group[];
+	// data tabs users
+	dataOpenTheTab;
+
+
 	pages : number = 4; // min 4 pages
 	pageSize : number = 5;
 	pageNumber : number = 0;
@@ -48,19 +57,38 @@ export class AdminUserComponent {
 	pageStart : number = 1;
 	inputName : string = '';
 
-	constructor(private _userService: UserService) {
-
+	constructor(
+		private _userService: UserService,
+		private _groupService: GroupService,
+		private _groupuserService: GroupuserService,
+		private elementRef: ElementRef
+	) {
+		// load all users
 		this._userService.getData()
-		.subscribe(
-			result => {
-				this.filteredItems = result;
-				console.log('result', result);
-				this.init();
-			},
-			error => {
-				alert("Error en la petición");
-			}
-		)
+			.subscribe(
+				result => {
+					this.filteredItems = result;
+					console.log('result', result);
+					this.init();
+				},
+				error => {
+					alert("Error en la petición user");
+				}
+			);
+		// load all groups
+		this._groupService.getData()
+			.subscribe(
+				result => {
+					console.log('result', result);
+					this.groupsItems = result;
+				},
+				error => {
+					alert("Error en la petición group");
+				}
+			);
+
+		// load Grupo con usuarios
+		this.triggerFalseClick();
 	}
 
 	/**
@@ -179,7 +207,6 @@ export class AdminUserComponent {
 		this.currentIndex = index;
 		this.refreshItems();
 	}
-
 	// function CRUD
 	onArticleFormSubmit() {
 		this.processValidation = true;
@@ -270,7 +297,6 @@ export class AdminUserComponent {
 
 		this.currentUserPassword = '';
 	}
-
 	getFormValidationErrors() {
 		Object.keys(this.articleForm.controls).forEach(key => {
 
@@ -281,5 +307,122 @@ export class AdminUserComponent {
 			  });
 			}
 		  });
+	}
+	// asociar grupos y usuarios
+	onDragStart(event, data) {
+		console.log('data id', data);
+		event.dataTransfer.setData('data', data);
+	}
+	onDrop(event, data) {
+		let idUser = event.dataTransfer.getData('data');
+		let idGroup = event.currentTarget.getAttribute('data-group-id');
+
+		event.preventDefault();
+		console.log('id', idUser);
+		console.log('event.currentTarget', event.currentTarget.getAttribute('data-group-id'));
+
+		// REST (post create new)
+		let article = new GroupUser();
+		article.id_group = idGroup;
+		article.id_user = idUser;
+
+		// 01: validation
+		for (let index = 0; index < this.dataOpenTheTab.length; index++) {
+			if (this.dataOpenTheTab[index].id_user == idUser) {
+				alert('Seleccione otro usuario. El Usuario (Id: ' + idUser + ') ya existe');
+				return false;
+			}
 		}
+
+		// 02: insert
+		this._groupuserService.createArticle(article)
+			.subscribe(successCode => {
+				this.statusCode = successCode;
+				// this.loadData(); // reFill data
+				// this.backToCreateArticle();
+
+				this.loadDataGroupUserByGroupId(idGroup);
+			},
+			errorCode => this.statusCode = errorCode);
+	}
+	allowDrop(event) {
+		event.preventDefault();
+	}
+	//Delete article
+	deleteGroupUser(event, articleId: string, id_group: string) {
+
+		if ( window.confirm("Está seguro de querer eliminar el item[" + articleId + "] ?") ) {
+			// var elem = event.currentTarget.parentElement;
+			// elem.parentNode.removeChild(elem);
+
+			// this.preProcessConfigurations();
+			this._groupuserService.deleteArticleById(articleId)
+				.subscribe(successCode => {
+						this.statusCode = successCode;
+						//Expecting success code 204 from server
+						this.statusCode = 204;
+						// this.loadData(); // reFill data
+						// this.backToCreateArticle();
+
+						this.loadDataGroupUserByGroupId(id_group);
+					},
+					errorCode => this.statusCode = errorCode);
+		}
+	}
+	/**
+	 ************************************************************
+	 * tab style (all functions)
+	 ************************************************************
+	 */
+	/**
+	 * muestra tab y lista los usuarios que pertenecen al grupo
+	 */
+	openTheTab(event, id_group) {
+		console.log('openTheTab id_group', id_group);
+		var i, tabcontent, tablinks;
+
+		// Get all elements with class="tabcontent" and hide them
+		tabcontent = document.getElementsByClassName("tabcontent");
+		for (i = 0; i < tabcontent.length; i++) {
+			tabcontent[i].style.display = "none";
+		}
+
+		// Get all elements with class="tablinks" and remove the class "active"
+		tablinks = document.getElementsByClassName("tablinks");
+		for (i = 0; i < tablinks.length; i++) {
+			tablinks[i].className = tablinks[i].className.replace(" active", "");
+		}
+
+		// Show the current tab, and add an "active" class to the button that opened the tab
+		let containerGroup = document.getElementById(id_group);
+		containerGroup.style.display = "block";
+		event.currentTarget.className += " active";
+
+
+		// Ajax load (all user into group)
+		this.loadDataGroupUserByGroupId(id_group);
+	}
+	// load reset data
+	loadDataGroupUserByGroupId(id_group) {
+		this._groupuserService.getDataGroupById(id_group)
+			.subscribe(article => {
+				this.dataOpenTheTab = article;
+			},
+			errorCode =>  this.statusCode = errorCode);
+	}
+
+	triggerFalseClick() {
+		let tablinks = document.getElementsByClassName('tablinks');
+		if (tablinks.length > 0) {
+			tablinks[0].click();
+		}
+	}
+	// load INIT
+	ngOnInit() {
+		// your other code
+		setTimeout(() => {
+			this.triggerFalseClick();
+		}, 200);
+	}
+
 }

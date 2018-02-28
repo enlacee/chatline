@@ -17,7 +17,6 @@ import { HowiamPipe } from './pipe/howiam.pipe';
 import { AdminUserComponent } from './admin/admin-user.component';
 import { AdminGroupComponent } from './admin/admin-group.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { AdminAssociateUserComponent } from './admin/admin-associate-user.component'; // for use ngModel
 
 const appRoutes: Routes = [
 	{
@@ -44,7 +43,6 @@ const appRoutes: Routes = [
 			// { path: '', redirectTo: 'usuarios', pathMatch: 'full' },
 			{ path: 'usuarios', component: AdminUserComponent },
 			{ path: 'grupos', component: AdminGroupComponent },
-			{ path: 'asociar', component: AdminAssociateUserComponent },
 		  ]
 	},
 ];
@@ -58,7 +56,6 @@ const appRoutes: Routes = [
 		HowiamPipe,
 		AdminUserComponent,
 		AdminGroupComponent,
-		AdminAssociateUserComponent
 	],
 	imports: [
 		BrowserModule,

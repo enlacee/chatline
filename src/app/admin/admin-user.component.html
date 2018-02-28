@@ -1,199 +1,247 @@
-<form (ngSubmit)="FilterByName()">
-	<div class="row no-gutters">
-		<div class="col-10">
-			<input class="form-control form-control-sm" type="text" name="inputName" [(ngModel)]="inputName" placeholder="Nombre" />
-		</div>
-		<div class="col-2">
-			<input type="submit" class="btn btn-sm btn-primary btn-lg btn-block" value="Buscar" />
-		</div>
-	</div>
-</form>
-
 <div class="row">
-	<div class="col-12 col-sm-10_">
-		<div class='panel-body mt-3'>
-			<table class="table table-sm">
-				<thead class="thead-inverse">
-					<tr>
-						<th>Id</th>
-						<th>Nombres</th>
-						<th>Apellidos</th>
-						<th>Opciones</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr *ngFor="let item of items">
-						<td scope="row">{{item.id_user}}</td>
-						<td>{{item.firstname}}</td>
-						<td>{{item.lastname}}</td>
-						<td>
-							<a href="javascript:void(0)" class="btn btn-link btn-sm" (click)="loadArticleToEdit(item.id_user)">Editar</a>
-							<a href="javascript:void(0)" class="btn btn-link btn-sm" (click)="deleteArticle(item.id_user)">Eliminar</a>
-						</td>
-					</tr>
-				</tbody>
-			</table>
-
-			<div class="row">
-				<div class="col-12 col-sm-4">
-					<label style="margin-top:10px">Pagina {{currentIndex}}/{{pageNumber}}</label>
+	<div class="col-md-8">
+		<form (ngSubmit)="FilterByName()">
+			<div class="row no-gutters">
+				<div class="col-10">
+					<input class="form-control form-control-sm" type="text" name="inputName" [(ngModel)]="inputName" placeholder="Nombre" />
 				</div>
-				<div class="col-12 col-sm-8">
-					<nav class="float-sm-right">
-						<ul class="pagination">
-							<li class="page-item" [ngClass]="{'disabled': (currentIndex == 1 || pageNumber == 0)}">
-								<a class="page-link" href="javascript:void(0)" (click)="prevPage()">Previous</a>
-							</li>
-							<li *ngFor="let page of pagesIndex" [ngClass]="{'active': (currentIndex == page)}" class="page-item">
-								<a class="page-link" href="javascript:void(0)" (click)="setPage(page)">{{page}}</a>
-							</li>
-							<li class="page-item" [ngClass]="{'disabled': (currentIndex == pageNumber || pageNumber == 0)}">
-								<a class="page-link" href="javascript:void(0)" (click)="nextPage()">Next</a>
-							</li>
-						</ul>
-					</nav>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-
-<div class="row mt-4">
-	<div class="col-sm-12">
-		<hr>
-		<h2>Detalle:</h2>
-
-		<form [formGroup]="articleForm" (ngSubmit)="onArticleFormSubmit()">
-			<div class="form-group row">
-				<label for="id_user" class="col-2 col-form-label">Id</label>
-				<div class="col-12 col-sm-10">
-					<input class="form-control" readonly formControlName="id_user">
-				</div>
-			</div>
-			<div class="form-group row">
-				<label for="name" class="col-2 col-form-label">Nombre</label>
-				<div class="col-12 col-sm-10">
-					<input class="form-control" formControlName="firstname" aria-describedby="firstname">
-					<small id="firstname" class="form-text text-muted"
-						*ngIf="articleForm.get('firstname').invalid && processValidation" [ngClass]="'error'">
-						El nombre es requerido.
-					</small>
-				</div>
-			</div>
-			<div class="form-group row">
-				<label for="lastname" class="col-2 col-form-label">Apellido</label>
-				<div class="col-12 col-sm-10">
-					<input class="form-control" formControlName="lastname">
-				</div>
-			</div>
-			<div class="form-group row">
-				<label for="dni" class="col-2 col-form-label">DNI</label>
-				<div class="col-12 col-sm-10">
-					<input type="number" class="form-control" formControlName="dni" maxlength="8">
-					<small class="form-text text-muted"
-						*ngIf="articleForm.get('dni').invalid && processValidation" [ngClass]="'error'">
-						El DNI al menos debe tener 8 caracteres.
-					</small>
-				</div>
-			</div>
-			<div class="form-group row">
-				<label for="area" class="col-2 col-form-label">Area</label>
-				<div class="col-12 col-sm-10">
-					<select class="form-control" formControlName="area">
-						<option value="">--seleccione--</option>
-						<option *ngFor="let item of dataAreas; let i = index" [value]="item">{{ item }}</option>
-					</select>
-				</div>
-			</div>
-			<div class="form-group row">
-				<label for="cargo" class="col-2 col-form-label">Cargo</label>
-				<div class="col-12 col-sm-10">
-					<select class="form-control" formControlName="cargo">
-						<option value="">--seleccione--</option>
-						<option *ngFor="let item of dataCargos; let i = index" [value]="item">{{ item }}</option>
-					</select>
-				</div>
-			</div>
-			<div class="form-group row">
-				<label for="status" class="col-2 col-form-label">Estado</label>
-				<div class="col-12 col-sm-10">
-					<div class="form-check form-check-inline">
-						<label class="custom-control custom-radio col-form-label">
-							<input type="radio" class="custom-control-input" formControlName="status" [value]="1">
-							<span class="custom-control-indicator"></span>
-							<span class="custom-control-description">Activo</span>
-						</label>
-					</div>
-					<div class="form-check form-check-inline">
-						<label class="custom-control custom-radio col-form-label">
-							<input type="radio" class="custom-control-input" formControlName="status" [value]="0">
-							<span class="custom-control-indicator"></span>
-							<span class="custom-control-description">Inactivo</span>
-						</label>
-					</div>
-				</div>
-			</div>
-			<div class="form-group row">
-					<label for="status" class="col-2 col-form-label">MultiChat</label>
-					<div class="col-12 col-sm-10">
-						<div class="form-check form-check-inline">
-							<label class="custom-control custom-radio col-form-label">
-								<input type="radio" class="custom-control-input" formControlName="chat_plus" [value]="1">
-								<span class="custom-control-indicator"></span>
-								<span class="custom-control-description">Activo</span>
-							</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<label class="custom-control custom-radio col-form-label">
-								<input type="radio" class="custom-control-input" formControlName="chat_plus" [value]="0">
-								<span class="custom-control-indicator"></span>
-								<span class="custom-control-description">Inactivo</span>
-							</label>
-						</div>
-					</div>
-				</div>
-			<div class="form-group row">
-				<label for="at_created" class="col-2 col-form-label">Fecha de Registro</label>
-				<div class="col-12 col-sm-10">
-					<input class="form-control" formControlName="at_created">
-				</div>
-			</div>
-
-			<fieldset>
-				<legend>Accesos:</legend>
-				<div class="form-group row">
-					<label for="username" class="col-2 col-form-label">Usuario</label>
-					<div class="col-12 col-sm-10">
-						<input type="email" class="form-control" formControlName="username">
-						<small class="form-text text-muted" *ngIf="articleForm.get('username').invalid && processValidation" [ngClass]="'error'">
-							El Usuario es requerido (correo electrónico).
-						</small>
-					</div>
-				</div>
-				<div class="form-group row">
-					<label for="password" class="col-2 col-form-label">Clave</label>
-					<div class="col-12 col-sm-10">
-						<input class="form-control" formControlName="password">
-						<small class="form-text text-muted">{{ currentUserPassword }}</small>
-						<small class="form-text text-muted" *ngIf="articleForm.get('password').invalid && processValidation" [ngClass]="'error'">
-							La clave es requerido.
-						</small>
-					</div>
-				</div>
-			</fieldset>
-
-			<div class="form-group row">
-				<div class="col-12 col-sm-10 text-center">
-					<button *ngIf="!articleIdToUpdate" class="btn btn-primary">Agregar</button>
-					<button *ngIf="articleIdToUpdate" class="btn btn-secondary">Actualizar</button>
-					<button (click)="backToCreateArticle()" *ngIf="articleIdToUpdate" class="btn btn-default">Go Back</button>
+				<div class="col-2">
+					<input type="submit" class="btn btn-sm btn-primary btn-lg btn-block" value="Buscar" />
 				</div>
 			</div>
 		</form>
 
-		<!-- <pre>{{articleForm.value | json}}</pre>
-		<pre>{{articleForm.valid}}</pre>
-		<pre>{{formControlName}}</pre> -->
+		<div class="row">
+			<div class="col-12 col-sm-10_">
+				<div class='panel-body mt-3'>
+					<table class="table table-sm">
+						<thead class="thead-inverse">
+							<tr>
+								<th>Id</th>
+								<th>Nombres</th>
+								<th>Apellidos</th>
+								<th>Opciones</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr *ngFor="let item of items" draggable="true" [attr.data-item-id]="item.id_user"
+								(dragstart)="onDragStart($event, item.id_user)">
+								<td scope="row">{{item.id_user}}</td>
+								<td>{{item.firstname}}</td>
+								<td>{{item.lastname}}</td>
+								<td>
+									<a href="javascript:void(0)" class="btn btn-link btn-sm" (click)="loadArticleToEdit(item.id_user)">Editar</a>
+									<a href="javascript:void(0)" class="btn btn-link btn-sm" (click)="deleteArticle(item.id_user)">Eliminar</a>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+
+					<div class="row">
+						<div class="col-12 col-sm-4">
+							<label style="margin-top:10px">Pagina {{currentIndex}}/{{pageNumber}}</label>
+						</div>
+						<div class="col-12 col-sm-8">
+							<nav class="float-sm-right">
+								<ul class="pagination">
+									<li class="page-item" [ngClass]="{'disabled': (currentIndex == 1 || pageNumber == 0)}">
+										<a class="page-link" href="javascript:void(0)" (click)="prevPage()">Previous</a>
+									</li>
+									<li *ngFor="let page of pagesIndex" [ngClass]="{'active': (currentIndex == page)}" class="page-item">
+										<a class="page-link" href="javascript:void(0)" (click)="setPage(page)">{{page}}</a>
+									</li>
+									<li class="page-item" [ngClass]="{'disabled': (currentIndex == pageNumber || pageNumber == 0)}">
+										<a class="page-link" href="javascript:void(0)" (click)="nextPage()">Next</a>
+									</li>
+								</ul>
+							</nav>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="row mt-4">
+			<div class="col-sm-12">
+				<hr>
+				<h2>Detalle:</h2>
+
+				<form [formGroup]="articleForm" (ngSubmit)="onArticleFormSubmit()">
+					<div class="form-group row">
+						<label for="id_user" class="col-2 col-form-label">Id</label>
+						<div class="col-12 col-sm-10">
+							<input class="form-control" readonly formControlName="id_user">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="name" class="col-2 col-form-label">Nombre</label>
+						<div class="col-12 col-sm-10">
+							<input class="form-control" formControlName="firstname" aria-describedby="firstname">
+							<small id="firstname" class="form-text text-muted"
+								*ngIf="articleForm.get('firstname').invalid && processValidation" [ngClass]="'error'">
+								El nombre es requerido.
+							</small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="lastname" class="col-2 col-form-label">Apellido</label>
+						<div class="col-12 col-sm-10">
+							<input class="form-control" formControlName="lastname">
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="dni" class="col-2 col-form-label">DNI</label>
+						<div class="col-12 col-sm-10">
+							<input type="number" class="form-control" formControlName="dni" maxlength="8">
+							<small class="form-text text-muted"
+								*ngIf="articleForm.get('dni').invalid && processValidation" [ngClass]="'error'">
+								El DNI al menos debe tener 8 caracteres.
+							</small>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="area" class="col-2 col-form-label">Area</label>
+						<div class="col-12 col-sm-10">
+							<select class="form-control" formControlName="area">
+								<option value="">--seleccione--</option>
+								<option *ngFor="let item of dataAreas; let i = index" [value]="item">{{ item }}</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="cargo" class="col-2 col-form-label">Cargo</label>
+						<div class="col-12 col-sm-10">
+							<select class="form-control" formControlName="cargo">
+								<option value="">--seleccione--</option>
+								<option *ngFor="let item of dataCargos; let i = index" [value]="item">{{ item }}</option>
+							</select>
+						</div>
+					</div>
+					<div class="form-group row">
+						<label for="status" class="col-2 col-form-label">Estado</label>
+						<div class="col-12 col-sm-10">
+							<div class="form-check form-check-inline">
+								<label class="custom-control custom-radio col-form-label">
+									<input type="radio" class="custom-control-input" formControlName="status" [value]="1">
+									<span class="custom-control-indicator"></span>
+									<span class="custom-control-description">Activo</span>
+								</label>
+							</div>
+							<div class="form-check form-check-inline">
+								<label class="custom-control custom-radio col-form-label">
+									<input type="radio" class="custom-control-input" formControlName="status" [value]="0">
+									<span class="custom-control-indicator"></span>
+									<span class="custom-control-description">Inactivo</span>
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="form-group row">
+							<label for="status" class="col-2 col-form-label">MultiChat</label>
+							<div class="col-12 col-sm-10">
+								<div class="form-check form-check-inline">
+									<label class="custom-control custom-radio col-form-label">
+										<input type="radio" class="custom-control-input" formControlName="chat_plus" [value]="1">
+										<span class="custom-control-indicator"></span>
+										<span class="custom-control-description">Activo</span>
+									</label>
+								</div>
+								<div class="form-check form-check-inline">
+									<label class="custom-control custom-radio col-form-label">
+										<input type="radio" class="custom-control-input" formControlName="chat_plus" [value]="0">
+										<span class="custom-control-indicator"></span>
+										<span class="custom-control-description">Inactivo</span>
+									</label>
+								</div>
+							</div>
+						</div>
+					<div class="form-group row">
+						<label for="at_created" class="col-2 col-form-label">Fecha de Registro</label>
+						<div class="col-12 col-sm-10">
+							<input class="form-control" formControlName="at_created">
+						</div>
+					</div>
+
+					<fieldset>
+						<legend>Accesos:</legend>
+						<div class="form-group row">
+							<label for="username" class="col-2 col-form-label">Usuario</label>
+							<div class="col-12 col-sm-10">
+								<input type="email" class="form-control" formControlName="username">
+								<small class="form-text text-muted" *ngIf="articleForm.get('username').invalid && processValidation" [ngClass]="'error'">
+									El Usuario es requerido (correo electrónico).
+								</small>
+							</div>
+						</div>
+						<div class="form-group row">
+							<label for="password" class="col-2 col-form-label">Clave</label>
+							<div class="col-12 col-sm-10">
+								<input class="form-control" formControlName="password">
+								<small class="form-text text-muted">{{ currentUserPassword }}</small>
+								<small class="form-text text-muted" *ngIf="articleForm.get('password').invalid && processValidation" [ngClass]="'error'">
+									La clave es requerido.
+								</small>
+							</div>
+						</div>
+					</fieldset>
+
+					<div class="form-group row">
+						<div class="col-12 col-sm-10 text-center">
+							<button *ngIf="!articleIdToUpdate" class="btn btn-primary">Agregar</button>
+							<button *ngIf="articleIdToUpdate" class="btn btn-secondary">Actualizar</button>
+							<button (click)="backToCreateArticle()" *ngIf="articleIdToUpdate" class="btn btn-default">Go Back</button>
+						</div>
+					</div>
+				</form>
+
+				<!-- <pre>{{articleForm.value | json}}</pre>
+				<pre>{{articleForm.valid}}</pre>
+				<pre>{{formControlName}}</pre> -->
+			</div>
+		</div>
+
+	</div>
+	<div class="col-md-4">
+
+		<div class="row">
+			<div class="col-12 content-the-group-head">
+				<h2>Agrupar</h2>
+				<p>Arrastrar y soltar en el rectangulo blanco</p>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-12 content-the-group d-flex flex-column">
+
+				<!-- simple tab -->
+				<div class="tab">
+					<button class="tablinks btn-outline-secondary"
+						[attr.data-group-id]="item.id_group"
+						[class.active]="(i == 0)? true : false"
+						*ngFor="let item of groupsItems; let i = index"
+						(click)="openTheTab($event, item.id_group)">{{ item.name }}</button>
+				</div><!-- tab button-->
+				<div *ngFor="let item of groupsItems; let i = index"
+					class="group tabcontent"
+					[style.display]="(i == 0)? 'block' : 'none'"
+					[attr.data-group-id]="item.id_group"
+					[attr.data-group-name]="item.name"
+					(drop)="onDrop($event, dropData)"
+					(dragover)="allowDrop($event)"
+					[attr.id]="item.id_group">
+					<ol>
+						<li *ngFor="let item of dataOpenTheTab; let i = index" >
+							{{item.firstname}} {{item.lastname}}
+							(<a href="javascript:void(0)" (click)="deleteGroupUser($event, item.id_group_user, item.id_group)">eliminar</a>)
+						</li>
+					</ol>
+				</div><!-- tab content -->
+			</div>
+		</div>
 	</div>
 </div>
+
+
+
+
+

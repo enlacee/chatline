@@ -1,0 +1,27 @@
+h2 {
+	font-size: 1.5em;
+}
+tbody tr{
+	cursor: move;
+}
+
+.content-the-group-head{
+	h2 {
+		font-size: 1.5em;
+		text-align: center;
+	}
+	p {
+		text-align: center;
+	}
+}
+
+.content-the-group{
+	.tab{
+		// background-color: #ccc;
+	}
+	.group{
+		width: 100%;
+		min-height: 15em;
+		background-color: white;
+	}
+}
