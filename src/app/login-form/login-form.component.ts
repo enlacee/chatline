@@ -38,11 +38,22 @@ export class LoginFormComponent {
 		this._usersService.login(formdat)
 			.subscribe(
 				result => {
-					console.log('result', result);
-					if (result) {
-						localStorage.setItem('currentUser', JSON.stringify(result));
-						this._router.navigate(['admin']);
-						// localStorage.setItem('currentUser', JSON.stringify({ token: token, name: name }));
+
+					if (typeof(result) !== 'undefined' && result !== false) {
+						if (typeof(form['is-admin']) !== 'undefined') {
+							localStorage.setItem('currentUserAdmin', JSON.stringify(result));
+							this._router.navigate(['admin']);
+						} else if (
+							typeof(result['id_rol']) !== 'undefined' &&
+							result['id_rol'] === 2 ||
+							result.id_rol === 3
+						) {
+							localStorage.setItem('currentUser', JSON.stringify(result));
+							this._router.navigate(['']);
+							console.log('Ingresaste to room chat!');
+						}
+					} else {
+						alert('Usuario sin acceso');
 					}
 				},
 				error => {

@@ -66,4 +66,11 @@ export class UserService {
 		return this._http.delete(this.apiURL + "/" + articleId)
 			.map(res => res.json());
 	}
+
+	// others
+	getDataRoles() {
+
+		return this._http.get(this._variableGlobal.apiURL + '/roles')
+			.map(res => res.json());
+	}
 }

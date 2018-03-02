@@ -12,17 +12,14 @@ export class AdminComponent {
 	@Input() user:User;
 
 	constructor(private _router: Router) {
-
-		let data = JSON.parse(localStorage.getItem('currentUser'));
-		this.user = data;
-
-		console.log('this.user', this.user);
+		// get data user  before loged
+		this.user = JSON.parse(localStorage.getItem('currentUserAdmin'));
 	}
 
 	logout(event){
 		event.preventDefault();
 		if (window.confirm("Está seguro de querer salir?")) {
-			localStorage.removeItem('currentUser');
+			localStorage.removeItem('currentUserAdmin');
 			this._router.navigate(['logina']);
 		}
 	}

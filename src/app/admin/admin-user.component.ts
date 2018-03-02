@@ -7,6 +7,7 @@ import { GroupService } from '../group.service';
 import { GroupuserService } from '../groupuser.service';
 import { Group } from '../models/group';
 import { GroupUser } from '../models/group-user';
+import { Rol } from '../models/rol';
 
 @Component({
 	selector: 'app-admin-user',
@@ -14,7 +15,7 @@ import { GroupUser } from '../models/group-user';
 	styleUrls: ['./admin-user.component.scss'],
 	providers: [UserService, GroupService, GroupuserService]
 })
-export class AdminUserComponent implements OnInit {
+export class AdminUserComponent {
 
 	// rest variables
 	public statusCode: number;
@@ -44,6 +45,7 @@ export class AdminUserComponent implements OnInit {
 	// others
 	filteredItems : User[];
 	groupsItems : Group[];
+	rolesItems: Rol[];
 	// data tabs users
 	dataOpenTheTab;
 
@@ -68,18 +70,31 @@ export class AdminUserComponent implements OnInit {
 			.subscribe(
 				result => {
 					this.filteredItems = result;
-					console.log('result', result);
+					console.log('users', result);
 					this.init();
 				},
 				error => {
 					alert("Error en la petición user");
 				}
 			);
+		// laod all roles
+		this._userService.getDataRoles()
+			.subscribe(
+				result => {
+					this.rolesItems = result;
+					console.log('roles', result);
+					this.init();
+				},
+				error => {
+					alert("Error en la petición user");
+				}
+			);
+
 		// load all groups
 		this._groupService.getData()
 			.subscribe(
 				result => {
-					console.log('result', result);
+					console.log('groups', result);
 					this.groupsItems = result;
 				},
 				error => {
@@ -416,6 +431,7 @@ export class AdminUserComponent implements OnInit {
 		if (tablinks.length > 0) {
 			tablinks[0].click();
 		}
+
 	}
 	// load INIT
 	ngOnInit() {
