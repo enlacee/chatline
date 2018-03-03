@@ -1,3 +1,72 @@
-<p>
-  chat works!
-</p>
+<div class="container the-content" style="min-height:750px">
+	<div class="row no-gutters_">
+		<div class="col-10_ header-left">
+			<h1>Usuario: {{user.username }} identificado con DNI N {{user.dni}}</h1>
+		</div>
+		<div class="col-2_ header-right">
+			<p class="close-red">
+				<a href="javascript:void(0)" (click)="logout($event)">Salir</a>
+			</p>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-12">
+			<ul class="list-tab mt-2">
+				<li>
+					<a class="btn btn-link tablinks" href="javascript:void(0)"
+					*ngFor="let item of groupsItems; let i = index"
+					[attr.data-group-id]="item.id_group"
+					(click)="openTheTab($event, item.id_group)">{{ item.name }}</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-9">
+			<div *ngFor="let item of groupsItems; let i = index"
+				class="group tabcontent"
+				[style.display]="(i >= 0)? 'none' : 'block'"
+				[attr.data-group-id]="item.id_group"
+				[attr.data-group-name]="item.name"
+				[attr.id]="item.id_group">
+				<h2 class="text-center">sala de chat {{item.name}}</h2>
+				<div>
+					<p><strong>Carlos torres</strong>:</p>
+					<p>hola como estas?</p>
+					<p><strong>Monica Sanchez</strong>:</p>
+					<p>hola carlos como estas tú</p>
+					<p><strong>Claudia Ramirez</strong>:</p>
+					<p>hola monica, hola carlos</p>
+					<p></p>
+					<p></p>
+					<p></p>
+					<p></p>
+					<p></p>
+					<p></p>
+					<p></p>
+					<form action="">
+							<input type="text" value="">
+							<input type="submit">
+					</form>
+				</div>
+			</div><!-- tab content -->
+		</div>
+		<div class="col-sm-3">
+			<h2>Lista de usuarios</h2>
+
+			<ol>
+				<li *ngFor="let item of dataOpenTheTab; let i = index" >
+					{{item.firstname}} {{item.lastname}}
+				</li>
+			</ol>
+		</div>
+	</div>
+
+
+
+	<div class="row">
+		<div class="col-12 col-md-12">
+			<router-outlet></router-outlet>
+		</div>
+	</div>
+</div>

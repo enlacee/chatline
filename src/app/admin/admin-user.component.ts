@@ -83,7 +83,6 @@ export class AdminUserComponent {
 				result => {
 					this.rolesItems = result;
 					console.log('roles', result);
-					this.init();
 				},
 				error => {
 					alert("Error en la petición user");
@@ -427,10 +426,10 @@ export class AdminUserComponent {
 	}
 
 	triggerFalseClick() {
-		let tablinks = document.getElementsByClassName('tablinks');
-		if (tablinks.length > 0) {
-			tablinks[0].click();
-		}
+		// let tablinks = document.getElementsByClassName('tablinks');
+		// if (tablinks.length > 0) {
+		// 	tablinks[0].click();
+		// }
 
 	}
 	// load INIT

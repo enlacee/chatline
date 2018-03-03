@@ -18,3 +18,93 @@
 	border-collapse: collapse;
 	background-color: #fff;
 }
+
+
+// theme
+@import "../node_modules/bootstrap/scss/bootstrap-grid.scss";
+h2 {
+	font-size: 1.35em;
+}
+.form-group.row{
+	margin: 0 0 0.19em 0;
+}
+.the-content{
+	display: flex;
+	flex-direction: column;
+	background-color: #eee;
+	.row .header-left{
+		background-color: $primary;
+	}
+}
+.header-left{
+	display: block;
+	@include media-breakpoint-up(xs) {
+		width: 80%;
+	}
+	@include media-breakpoint-up(sm) {
+		width: 90%;
+	}
+	@include media-breakpoint-up(md) {
+		width: 95%;
+	}
+	h1{
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		height: 100%;
+		font-size: 1.3em;
+		font-weight: bold;
+		color: white;
+		text-align: center;
+		margin: 0;
+		padding: 0;
+		@include media-breakpoint-up(xs) {
+			font-size: 1em;
+		}
+	}
+}
+.header-right{
+	display: block;
+	background-color: $red;
+	text-align: center;
+	@include media-breakpoint-up(xs) {
+		width: 20%;
+	}
+	@include media-breakpoint-up(sm) {
+		width: 10%;
+	}
+	@include media-breakpoint-up(md) {
+		width: 5%;
+	}
+	.close-red{
+		font-size: 1.3em;
+		margin: 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		height: 100%;
+		margin: 0;
+		@include media-breakpoint-up(xs) {
+			font-size: 1em;
+		}
+		a{
+			color: white;
+			font-weight: bold;
+		}
+	}
+}
+
+ul.list-tab{
+	margin: 0;
+	padding: 0;
+	li{
+		display: inline;
+		margin-right: 1em;
+		a.active {
+			font-weight: bold;
+			text-decoration: underline;
+		}
+	}
+}
+
