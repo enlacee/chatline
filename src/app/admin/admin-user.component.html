@@ -226,14 +226,14 @@
 				<!-- simple tab -->
 				<div class="tab">
 					<button class="tablinks btn-outline-secondary"
-						[attr.data-group-id]="item.id_group"
-						[class.active]="(i == 0)? true : false"
 						*ngFor="let item of groupsItems; let i = index"
+						[attr.data-group-id]="item.id_group"
+						[class.active]="(i == indexGroupSelected) ? true : false"
 						(click)="openTheTab($event, item.id_group)">{{ item.name }}</button>
 				</div><!-- tab button-->
 				<div *ngFor="let item of groupsItems; let i = index"
 					class="group tabcontent"
-					[style.display]="(i == 0)? 'block' : 'none'"
+					[style.display]="(i == indexGroupSelected)? 'block' : 'none'"
 					[attr.data-group-id]="item.id_group"
 					[attr.data-group-name]="item.name"
 					(drop)="onDrop($event, dropData)"

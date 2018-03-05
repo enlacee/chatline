@@ -2,109 +2,127 @@
 @import "./assets/bootstrap/_variables.scss";
 @import "../node_modules/bootstrap/scss/bootstrap.scss";
 
-// @import "../node_modules/patternfly/dist/css/patternfly.css";
+// setting font-awesome
+// $fa-font-path : '../node_modules/font-awesome/fonts';
+// @import "../node_modules/font-awesome/scss/font-awesome.scss";
 
+// @import "../node_modules/patternfly/dist/css/patternfly.css";
 /**
  * customs css
  **/
+.chatline{
+	h2 {
+		font-size: 1.35em;
+	}
+	.form-group.row{
+		margin: 0 0 0.19em 0;
+	}
+	// fix show radio button input native
+	.custom-control-input{
+		position: inherit;
+		z-index: auto;
+		opacity: 1;
+	}
+	.table{
+		border-collapse: collapse;
+		background-color: #fff;
+	}
 
-// fix show radio button input native
-.custom-control-input{
-	position: inherit;
-	z-index: auto;
-	opacity: 1;
-}
-.table{
-	border-collapse: collapse;
-	background-color: #fff;
-}
-
-
-// theme
-@import "../node_modules/bootstrap/scss/bootstrap-grid.scss";
-h2 {
-	font-size: 1.35em;
-}
-.form-group.row{
-	margin: 0 0 0.19em 0;
-}
-.the-content{
-	display: flex;
-	flex-direction: column;
-	background-color: #eee;
-	.row .header-left{
-		background-color: $primary;
-	}
-}
-.header-left{
-	display: block;
-	@include media-breakpoint-up(xs) {
-		width: 80%;
-	}
-	@include media-breakpoint-up(sm) {
-		width: 90%;
-	}
-	@include media-breakpoint-up(md) {
-		width: 95%;
-	}
-	h1{
+	// imports break-point into internal file sass
+	@import "../node_modules/bootstrap/scss/bootstrap-grid.scss";
+	.the-content{
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
-		height: 100%;
-		font-size: 1.3em;
-		font-weight: bold;
-		color: white;
+		background-color: #eee;
+		.row .header-left{
+			background-color: $primary;
+		}
+	}
+	.header-left{
+		display: block;
+		@include media-breakpoint-up(xs) {
+			width: 80%;
+		}
+		@include media-breakpoint-up(sm) {
+			width: 90%;
+		}
+		@include media-breakpoint-up(md) {
+			width: 95%;
+		}
+		h1{
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			height: 100%;
+			font-size: 1.3em;
+			font-weight: bold;
+			color: white;
+			text-align: center;
+			margin: 0;
+			padding: 0;
+			@include media-breakpoint-up(xs) {
+				font-size: 1em;
+			}
+		}
+	}
+	.header-right{
+		display: block;
+		background-color: $red;
 		text-align: center;
+		@include media-breakpoint-up(xs) {
+			width: 20%;
+		}
+		@include media-breakpoint-up(sm) {
+			width: 10%;
+		}
+		@include media-breakpoint-up(md) {
+			width: 5%;
+		}
+		.close-red{
+			font-size: 1.3em;
+			margin: 0;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			height: 100%;
+			margin: 0;
+			@include media-breakpoint-up(xs) {
+				font-size: 1em;
+			}
+			a{
+				color: white;
+				font-weight: bold;
+			}
+		}
+	}
+	ul.list-tab{
 		margin: 0;
 		padding: 0;
-		@include media-breakpoint-up(xs) {
-			font-size: 1em;
+		li{
+			display: inline;
+			margin-right: 1em;
+			a.active {
+				font-weight: bold;
+				text-decoration: underline;
+			}
 		}
 	}
-}
-.header-right{
-	display: block;
-	background-color: $red;
-	text-align: center;
-	@include media-breakpoint-up(xs) {
-		width: 20%;
-	}
-	@include media-breakpoint-up(sm) {
-		width: 10%;
-	}
-	@include media-breakpoint-up(md) {
-		width: 5%;
-	}
-	.close-red{
-		font-size: 1.3em;
-		margin: 0;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		height: 100%;
-		margin: 0;
-		@include media-breakpoint-up(xs) {
-			font-size: 1em;
-		}
+	.status-user-list{
 		a{
-			color: white;
-			font-weight: bold;
+			color:black;
+		}
+		.ico-status{
+			background:#eb3d00;
+			border-radius: 50%;
+			display: inline-block;
+			height: 0.750em;
+			margin-left: 0;
+			width: 0.750em;
+			border: 1px solid black;
+			&.active{
+				background: rgb(66, 183, 42);
+			}
 		}
 	}
 }
-
-ul.list-tab{
-	margin: 0;
-	padding: 0;
-	li{
-		display: inline;
-		margin-right: 1em;
-		a.active {
-			font-weight: bold;
-			text-decoration: underline;
-		}
-	}
-}
-

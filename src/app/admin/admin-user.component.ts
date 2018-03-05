@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnInit } from '@angular/core';
 import { FormGroup, FormControl/*, FormBuilder*/, Validators, ValidationErrors } from '@angular/forms';
 // import { EmailValidator } from '@angular/forms';
 import { User } from '../models/user';
@@ -15,7 +15,7 @@ import { Rol } from '../models/rol';
 	styleUrls: ['./admin-user.component.scss'],
 	providers: [UserService, GroupService, GroupuserService]
 })
-export class AdminUserComponent {
+export class AdminUserComponent  implements OnInit {
 
 	// rest variables
 	public statusCode: number;
@@ -44,7 +44,9 @@ export class AdminUserComponent {
 
 	// others
 	filteredItems : User[];
-	groupsItems : Group[];
+	// groupsItems : Group[];
+	public groupsItems:any[] = [];
+	public indexGroupSelected = 0;
 	rolesItems: Rol[];
 	// data tabs users
 	dataOpenTheTab;
@@ -65,7 +67,12 @@ export class AdminUserComponent {
 		private _groupuserService: GroupuserService,
 		private elementRef: ElementRef
 	) {
-		// load all users
+
+	}
+
+	ngOnInit() {
+
+		// load users
 		this._userService.getData()
 			.subscribe(
 				result => {
@@ -77,7 +84,8 @@ export class AdminUserComponent {
 					alert("Error en la petición user");
 				}
 			);
-		// laod all roles
+
+		// load roles
 		this._userService.getDataRoles()
 			.subscribe(
 				result => {
@@ -95,14 +103,17 @@ export class AdminUserComponent {
 				result => {
 					console.log('groups', result);
 					this.groupsItems = result;
+
+					if (typeof(this.groupsItems) !== 'undefined' && this.groupsItems.length > 0) {
+						this.loadDataGroupUserByGroupId(
+							this.groupsItems[this.indexGroupSelected].id_group
+						);
+					}
 				},
 				error => {
 					alert("Error en la petición group");
 				}
 			);
-
-		// load Grupo con usuarios
-		this.triggerFalseClick();
 	}
 
 	/**
@@ -423,21 +434,6 @@ export class AdminUserComponent {
 				this.dataOpenTheTab = article;
 			},
 			errorCode =>  this.statusCode = errorCode);
-	}
-
-	triggerFalseClick() {
-		// let tablinks = document.getElementsByClassName('tablinks');
-		// if (tablinks.length > 0) {
-		// 	tablinks[0].click();
-		// }
-
-	}
-	// load INIT
-	ngOnInit() {
-		// your other code
-		setTimeout(() => {
-			this.triggerFalseClick();
-		}, 200);
 	}
 
 }

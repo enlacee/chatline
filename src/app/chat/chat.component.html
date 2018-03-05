@@ -54,9 +54,14 @@
 		<div class="col-sm-3">
 			<h2>Lista de usuarios</h2>
 
-			<ol>
+			<ol class="status-user-list">
 				<li *ngFor="let item of dataOpenTheTab; let i = index" >
-					{{item.firstname}} {{item.lastname}}
+					<a href="javascript:void(0)">
+						<!-- <i class="fa fa-circle"></i> -->
+						<span class="ico-status"></span>
+						{{item.firstname + ' '+ item.lastname | truncate:[20, '...']}}
+					</a>
+					<!-- <span class="ico-status"></span>  -->
 				</li>
 			</ol>
 		</div>

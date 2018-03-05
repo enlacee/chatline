@@ -16,6 +16,7 @@ import { LoginFormAdminComponent } from './login-form-admin/login-form-admin.com
 
 // pipe
 import { HowiamPipe } from './pipe/howiam.pipe';
+import { TruncatePipe } from './pipe/truncate.pipe';
 import { AdminUserComponent } from './admin/admin-user.component';
 import { AdminGroupComponent } from './admin/admin-group.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -59,6 +60,7 @@ const appRoutes: Routes = [
 		LoginFormAdminComponent,
 		AdminComponent,
 		HowiamPipe,
+		TruncatePipe,
 		AdminUserComponent,
 		AdminGroupComponent,
 		ChatComponent,

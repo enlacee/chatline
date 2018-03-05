@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 export class VariableGlobalService {
 
 	public apiURL:string = 'http://local.chatlineapi.com/v1';
+	public apiURLsocket: string = 'http://local.chatlineapi.com:2020';
 
 	constructor() {	}
 
