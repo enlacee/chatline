@@ -1,9 +1,12 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { User } from '../models/user';
 import { Router } from '@angular/router';
 
 import { GroupuserService } from '../groupuser.service';
 import { ChatService } from '../chat.service';
+import { VariableGlobalService } from '../variable-global.service';
+
+import * as io from 'socket.io-client';
 
 @Component({
 	selector: 'app-chat',
@@ -11,41 +14,119 @@ import { ChatService } from '../chat.service';
 	styleUrls: ['./chat.component.scss'],
 	providers: [GroupuserService, ChatService]
 })
-export class ChatComponent {
+export class ChatComponent implements OnInit {
 
 	@Input() user:User;
-	@Input() groupsItems:Object;
-	public dataOpenTheTab;
+
+	public groupsItems:any[] = [];
+	public indexGroupSelected = 0;
+	public groupUsers:any[] = [];
+	public dataSocket = [];
 	public statusCode;
+
+	private socket;
 
 	constructor(
 		private _router: Router,
 		private _groupuserService: GroupuserService,
 		private _chatService: ChatService,
+		private _variableGlobal: VariableGlobalService,
 
-	) {
-		// get data user before to loged
+	) {	}
+
+	ngOnInit(): void {
+		// load current user
 		this.user = JSON.parse(localStorage.getItem('currentUser'));
 
-		// get data all groups
+		// load groups
 		let params = [];
 		params.push({'id': 'id_user', 'value': this.user.id_user});
 		this._chatService.getData(params)
 			.subscribe(
 				result => {
 					this.groupsItems = result;
-					console.log('groupsItems', result);
+					if (typeof(this.groupsItems) !== 'undefined' && this.groupsItems.length > 0) {
+						// load users from group
+						this.loadDataGroupUserByGroupId(
+							this.groupsItems[this.indexGroupSelected].id_group
+						);
+					}
+					console.log('this.groupsItems', this.groupsItems);
+					// load tab
 				},
 				error => {
 					alert("Error en la petición user");
 				}
 			);
 
+		// start socket connect (LOGIN SOCKET)
+		this.socket = io(this._variableGlobal.apiURLsocket);
+		this.socket.emit('add user', this.user.id_user);
+
+		// Listerners
+		// Receive Added Todo
+		this.socket.on('login', (data) => {
+			console.log('EMIT LOGIN', data);
+
+			this.readDataSocket(data);
+			this.dataSocket = data;
+		});
+
+		// Receive Added Todo
+		this.socket.on('user joined', (data) => {
+			console.log('EMIT USER JOINED', data);
+
+			this.readDataSocket(data);
+			this.dataSocket = data;
+		});
+
+		// cuando el usuario sale del chat
+		this.socket.on('user left', (data) => {
+			this.readDataSocket(data);
+			this.dataSocket = data;
+		});
+
+	}
+
+	private readDataSocket(data){
+		this.setOfflineToUsers();
+		var self = this;
+
+		if (typeof(data.usernames) === 'undefined') {
+			return;
+		}
+
+		// each object
+		Object.keys(data.usernames).map(function(objectKey, index) {
+			var value = data.usernames[objectKey];
+			console.log(value);
+			// each all user and set status
+
+			if ( self.groupUsers.length > 0) {
+				for (let index = 0; index < self.groupUsers.length; index++) {
+					console.log('===', self.groupUsers[index].id_user, value);
+					if (self.groupUsers[index].id_user === value) {
+						self.groupUsers[index].online = true; console.log('TRUEE');
+					}
+				}
+			}
+		});
+
+	}
+	private setOfflineToUsers(){
+
+		if ( this.groupUsers.length > 0) {
+			for (let index = 0; index < this.groupUsers.length; index++) {
+				this.groupUsers[index].online = false;
+			}
+		}
 	}
 
 	logout(event){
 		event.preventDefault();
 		if (window.confirm("Está seguro de querer salir?")) {
+			this.socket.emit('user logout');
+
 			localStorage.removeItem('currentUser');
 			this._router.navigate(['login']);
 		}
@@ -84,10 +165,28 @@ export class ChatComponent {
 	loadDataGroupUserByGroupId(id_group) {
 		this._groupuserService.getDataGroupById(id_group)
 			.subscribe(article => {
-				this.dataOpenTheTab = article;
+				// add users
+				this.groupUsers = [];
+				for (let index = 0; index < article.length; index++) {
+					const element = article[index];
+					if (this.user.id_user !== element.id_user) {
+						this.groupUsers.push(element);
+					}
+				}
+
+				this.readDataSocket(this.dataSocket);
 			},
 			errorCode =>  this.statusCode = errorCode);
 	}
 
+
+
+	sendMessage() {
+		// this.username = this.user.username;
+		console.log('enviando mensajesss');
+		this._chatService.sendMessage('hola soy pepe lucho', this.socket);
+		// this.message = '';
+
+	}
 
 }

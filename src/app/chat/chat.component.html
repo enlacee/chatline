@@ -15,6 +15,7 @@
 				<li>
 					<a class="btn btn-link tablinks" href="javascript:void(0)"
 					*ngFor="let item of groupsItems; let i = index"
+					[class.active]="(i == indexGroupSelected)"
 					[attr.data-group-id]="item.id_group"
 					(click)="openTheTab($event, item.id_group)">{{ item.name }}</a>
 				</li>
@@ -25,9 +26,8 @@
 		<div class="col-sm-9">
 			<div *ngFor="let item of groupsItems; let i = index"
 				class="group tabcontent"
-				[style.display]="(i >= 0)? 'none' : 'block'"
+				[style.display]="(i == indexGroupSelected) ? 'block' : 'none'"
 				[attr.data-group-id]="item.id_group"
-				[attr.data-group-name]="item.name"
 				[attr.id]="item.id_group">
 				<h2 class="text-center">sala de chat {{item.name}}</h2>
 				<div>
@@ -46,22 +46,19 @@
 					<p></p>
 					<form action="">
 							<input type="text" value="">
-							<input type="submit">
+							<input type="button" (click)="sendMessage($event)" value="Enviar">
 					</form>
 				</div>
 			</div><!-- tab content -->
 		</div>
 		<div class="col-sm-3">
 			<h2>Lista de usuarios</h2>
-
 			<ol class="status-user-list">
-				<li *ngFor="let item of dataOpenTheTab; let i = index" >
+				<li *ngFor="let item of groupUsers; let i = index" >
 					<a href="javascript:void(0)">
-						<!-- <i class="fa fa-circle"></i> -->
-						<span class="ico-status"></span>
+						<span class="ico-status" [class.active]="item.online"></span>
 						{{item.firstname + ' '+ item.lastname | truncate:[20, '...']}}
 					</a>
-					<!-- <span class="ico-status"></span>  -->
 				</li>
 			</ol>
 		</div>
