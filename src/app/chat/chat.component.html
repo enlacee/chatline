@@ -45,26 +45,25 @@
 					<p></p>
 					<p></p>
 					<form action="">
-							<input type="text" value="">
-							<input type="button" (click)="sendMessage($event)" value="Enviar">
+						<input type="text" value="{{id_group_user}}" #idgroupuser>
+						<hr>
+						<input type="text" value="{{item.id_group}}" #idgroup>
+						<input type="text" value="" #message>
+						<input type="button"
+							(click)="sendMessage($event,
+								{	'id_group_user': idgroupuser.value,
+									'id_group': idgroup.value ,
+									'message': message.value
+								})"
+							value="Enviar">
 					</form>
 				</div>
 			</div><!-- tab content -->
 		</div>
 		<div class="col-sm-3">
-			<h2>Lista de usuarios</h2>
-			<ol class="status-user-list">
-				<li *ngFor="let item of groupUsers; let i = index" >
-					<a href="javascript:void(0)">
-						<span class="ico-status" [class.active]="item.online"></span>
-						{{item.firstname + ' '+ item.lastname | truncate:[20, '...']}}
-					</a>
-				</li>
-			</ol>
+			<app-online-users [users]="groupUsers"></app-online-users>
 		</div>
 	</div>
-
-
 
 	<div class="row">
 		<div class="col-12 col-md-12">

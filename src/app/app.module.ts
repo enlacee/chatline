@@ -21,6 +21,7 @@ import { AdminUserComponent } from './admin/admin-user.component';
 import { AdminGroupComponent } from './admin/admin-group.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChatComponent } from './chat/chat.component';
+import { OnlineUsersComponent } from './chat/online-users.component';
 
 const appRoutes: Routes = [
 	{
@@ -64,6 +65,7 @@ const appRoutes: Routes = [
 		AdminUserComponent,
 		AdminGroupComponent,
 		ChatComponent,
+		OnlineUsersComponent,
 	],
 	imports: [
 		BrowserModule,

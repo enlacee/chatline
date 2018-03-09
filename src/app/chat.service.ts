@@ -17,27 +17,19 @@ export class ChatService {
 		// this.apiURL = this._variableGlobal.apiURL + '/groups-users';
 	}
 
-	// Fetch All
-	getData(params:any[]) {
+	// Obtener la lista de gropos que pertenece el usuario
+	getlistGroupByIdUser(params:any[]) {
 		let myHeaders = new Headers();
 		myHeaders.append('Content-Type', 'application/json');
-
 		let myParams = new URLSearchParams();
 		let idUser = false;
-		console.log('params', params);
 
 		params.forEach(element => {
-			console.log('element.id', element.id);
-			console.log('element.value', element.value);
 			myParams.append(element.id, element.value);
 			if (element.id == 'id_user'){
 				idUser = element.value;
 			}
 		});
-		// params.forEach(element => {
-		// 	myParams.append('id', bookId);
-		// });
-
 
 		let options = new RequestOptions({ headers: myHeaders, params: myParams });
 

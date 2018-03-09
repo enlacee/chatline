@@ -12,7 +12,7 @@ import * as io from 'socket.io-client';
 	selector: 'app-chat',
 	templateUrl: './chat.component.html',
 	styleUrls: ['./chat.component.scss'],
-	providers: [GroupuserService, ChatService]
+	providers: [GroupuserService, ChatService],
 })
 export class ChatComponent implements OnInit {
 
@@ -23,6 +23,7 @@ export class ChatComponent implements OnInit {
 	public groupUsers:any[] = [];
 	public dataSocket = [];
 	public statusCode;
+	public id_group_user: number = 0;
 
 	private socket;
 
@@ -39,9 +40,9 @@ export class ChatComponent implements OnInit {
 		this.user = JSON.parse(localStorage.getItem('currentUser'));
 
 		// load groups
-		let params = [];
-		params.push({'id': 'id_user', 'value': this.user.id_user});
-		this._chatService.getData(params)
+		this._chatService.getlistGroupByIdUser(
+				[{'id': 'id_user', 'value': this.user.id_user}]
+			)
 			.subscribe(
 				result => {
 					this.groupsItems = result;
@@ -63,7 +64,9 @@ export class ChatComponent implements OnInit {
 		this.socket = io(this._variableGlobal.apiURLsocket);
 		this.socket.emit('add user', this.user.id_user);
 
+		// *****************************************************
 		// Listerners
+		// *****************************************************
 		// Receive Added Todo
 		this.socket.on('login', (data) => {
 			console.log('EMIT LOGIN', data);
@@ -86,6 +89,13 @@ export class ChatComponent implements OnInit {
 			this.dataSocket = data;
 		});
 
+		// notifica llego mensaje a mi & a otros usuarios
+		this.socket.on('new message', (data) => {
+			console.log("llego los mensajes new message:", data);
+		});
+
+
+
 	}
 
 	private readDataSocket(data){
@@ -106,7 +116,7 @@ export class ChatComponent implements OnInit {
 				for (let index = 0; index < self.groupUsers.length; index++) {
 					console.log('===', self.groupUsers[index].id_user, value);
 					if (self.groupUsers[index].id_user === value) {
-						self.groupUsers[index].online = true; console.log('TRUEE');
+						self.groupUsers[index].online = true; console.log('TRUEE', self.groupUsers[index]);
 					}
 				}
 			}
@@ -165,6 +175,9 @@ export class ChatComponent implements OnInit {
 	loadDataGroupUserByGroupId(id_group) {
 		this._groupuserService.getDataGroupById(id_group)
 			.subscribe(article => {
+				// find index
+				this.findIdGroupUser(article);
+
 				// add users
 				this.groupUsers = [];
 				for (let index = 0; index < article.length; index++) {
@@ -179,14 +192,30 @@ export class ChatComponent implements OnInit {
 			errorCode =>  this.statusCode = errorCode);
 	}
 
+	// Find *id_group_user* by id_user
+	private findIdGroupUser(data) {
+		if (typeof(data) !== 'undefined' && data.length > 0) {
+			for (let index = 0; index < data.length; index++) {
+				if (data[index].id_user === this.user.id_user) {
+					this.id_group_user = data[index].id_group_user;
+					return true;
+				}
+
+			}
+		}
+	}
 
 
-	sendMessage() {
+
+	sendMessage(event, data) {
+		event.preventDefault();
+		console.log('text', data);
+
 		// this.username = this.user.username;
-		console.log('enviando mensajesss');
-		this._chatService.sendMessage('hola soy pepe lucho', this.socket);
+		// console.log('enviando mensajesss');
+		// this._chatService.sendMessage('hola soy pepe lucho', this.socket);
 		// this.message = '';
-
+		this.socket.emit('new message', data);
 	}
 
 }
