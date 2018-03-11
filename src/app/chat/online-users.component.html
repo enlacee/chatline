@@ -1,9 +1,9 @@
-<h2>Lista de usuarios</h2>
-<ol class="status-user-list">
+<h2>Contactos ({{ users.length }})</h2>
+<ul class="status-user-list">
 	<li *ngFor="let item of users; let i = index" >
-		<a href="javascript:void(0)">
+		<a href="javascript:void(0)" class="btn disabled">
 			<span class="ico-status" [class.active]="item.online"></span>
 			{{item.firstname + ' '+ item.lastname | truncate:[20, '...']}}
 		</a>
 	</li>
-</ol>
+</ul>

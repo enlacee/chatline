@@ -41,14 +41,14 @@
 					<nav class="float-sm-right">
 						<ul class="pagination">
 							<li class="page-item" [ngClass]="{'disabled': (currentIndex == 1 || pageNumber == 0)}">
-								<a class="page-link" href="javascript:void(0)" (click)="prevPage()">Previous</a>
+								<a class="page-link" href="javascript:void(0)" (click)="prevPage()">Anterior</a>
 							</li>
 							<li *ngFor="let page of pagesIndex" [ngClass]="{'active': (currentIndex == page)}"
 								class="page-item">
 								<a class="page-link" href="javascript:void(0)" (click)="setPage(page)">{{page}}</a>
 							</li>
 							<li class="page-item" [ngClass]="{'disabled': (currentIndex == pageNumber || pageNumber == 0)}">
-								<a class="page-link" href="javascript:void(0)" (click)="nextPage()">Next</a>
+								<a class="page-link" href="javascript:void(0)" (click)="nextPage()">Siguiente</a>
 							</li>
 						</ul>
 					</nav>
@@ -85,7 +85,7 @@
 				<div class="col-12 col-sm-10 text-center">
 					<button *ngIf="!articleIdToUpdate" class="btn btn-primary">Agregar</button>
 					<button *ngIf="articleIdToUpdate" class="btn btn-secondary">Actualizar</button>
-					<button (click)="backToCreateArticle()" *ngIf="articleIdToUpdate" class="btn btn-default">Go Back</button>
+					<button (click)="backToCreateArticle()" *ngIf="articleIdToUpdate" class="btn btn-default">Regresar</button>
 				</div>
 			</div>
 		</form>

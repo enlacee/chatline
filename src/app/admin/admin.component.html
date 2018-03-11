@@ -1,25 +1,28 @@
-<div class="container the-content">
-	<div class="row no-gutters_">
-		<div class="col-10_ header-left">
-			<h1>Usuario: {{user.id_rol | howiam }} identificado con DNI N {{user.dni}}</h1>
+<div class="chatline">
+	<div class="container the-content">
+		<div class="row no-gutters_">
+			<div class="col-10_ header-left">
+				<h1>Usuario: {{user.id_rol | howiam }} identificado con DNI N {{user.dni}}</h1>
+			</div>
+			<div class="col-2_ header-right">
+				<p class="close-red">
+					<a href="javascript:void(0)" (click)="logout($event)">Salir</a>
+				</p>
+			</div>
 		</div>
-		<div class="col-2_ header-right">
-			<p class="close-red">
-				<a href="javascript:void(0)" (click)="logout($event)">Salir</a>
-			</p>
+		<div class="row">
+			<div class="col-12 list-tab">
+				<ul>
+					<li><a class="btn btn-link" routerLink="/admin/usuarios" routerLinkActive="active">Usuarios</a></li>
+					<li><a class="btn btn-link" routerLink="/admin/grupos" routerLinkActive="active">Grupos</a></li>
+				</ul>
+			</div>
 		</div>
-	</div>
-	<div class="row">
-		<div class="col-12">
-			<ul class="list-tab mt-2">
-				<li><a class="btn btn-link" routerLink="/admin/usuarios" routerLinkActive="active">Usuarios</a></li>
-				<li><a class="btn btn-link" routerLink="/admin/grupos" routerLinkActive="active">Grupos</a></li>
-			</ul>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-12 col-md-12">
-			<router-outlet></router-outlet>
+		<div class="row">
+			<div class="col-12 col-md-12">
+				<router-outlet></router-outlet>
+			</div>
 		</div>
 	</div>
 </div>
+

@@ -1,73 +1,82 @@
-<div class="container the-content" style="min-height:750px">
-	<div class="row no-gutters_">
-		<div class="col-10_ header-left">
-			<h1>Usuario: {{user.username }} identificado con DNI N {{user.dni}}</h1>
-		</div>
-		<div class="col-2_ header-right">
-			<p class="close-red">
-				<a href="javascript:void(0)" (click)="logout($event)">Salir</a>
-			</p>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-12">
-			<ul class="list-tab mt-2">
-				<li>
-					<a class="btn btn-link tablinks" href="javascript:void(0)"
-					*ngFor="let item of groupsItems; let i = index"
-					[class.active]="(i == indexGroupSelected)"
-					[attr.data-group-id]="item.id_group"
-					(click)="openTheTab($event, item.id_group)">{{ item.name }}</a>
-				</li>
-			</ul>
-		</div>
-	</div>
-	<div class="row">
-		<div class="col-sm-9">
-			<div *ngFor="let item of groupsItems; let i = index"
-				class="group tabcontent"
-				[style.display]="(i == indexGroupSelected) ? 'block' : 'none'"
-				[attr.data-group-id]="item.id_group"
-				[attr.id]="item.id_group">
-				<h2 class="text-center">sala de chat {{item.name}}</h2>
-				<div>
-					<p><strong>Carlos torres</strong>:</p>
-					<p>hola como estas?</p>
-					<p><strong>Monica Sanchez</strong>:</p>
-					<p>hola carlos como estas tú</p>
-					<p><strong>Claudia Ramirez</strong>:</p>
-					<p>hola monica, hola carlos</p>
-					<p></p>
-					<p></p>
-					<p></p>
-					<p></p>
-					<p></p>
-					<p></p>
-					<p></p>
-					<form action="">
-						<input type="text" value="{{id_group_user}}" #idgroupuser>
-						<hr>
-						<input type="text" value="{{item.id_group}}" #idgroup>
-						<input type="text" value="" #message>
-						<input type="button"
-							(click)="sendMessage($event,
-								{	'id_group_user': idgroupuser.value,
-									'id_group': idgroup.value ,
-									'message': message.value
-								})"
-							value="Enviar">
-					</form>
-				</div>
-			</div><!-- tab content -->
-		</div>
-		<div class="col-sm-3">
-			<app-online-users [users]="groupUsers"></app-online-users>
-		</div>
-	</div>
+<div class="chatline">
+	<div class="container the-content">
 
-	<div class="row">
-		<div class="col-12 col-md-12">
-			<router-outlet></router-outlet>
-		</div>
+		<div class="box">
+			<div class="row no-gutters_">
+					<div class="col-10_ header-left">
+						<h1>Usuario: {{user.firstname + ' ' + user.lastname }} identificado con DNI N {{user.dni}}</h1>
+					</div>
+					<div class="col-2_ header-right">
+						<p class="close-red">
+							<a href="javascript:void(0)" (click)="logout($event)">Salir</a>
+						</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-12 list-tab">
+						<ul>
+							<li>
+								<a class="btn btn-link tablinks" href="javascript:void(0)"
+								*ngFor="let item of groupsItems; let i = index"
+								[class.active]="(i == indexGroupSelected)"
+								[attr.data-group-id]="item.id_group"
+								(click)="openTheTab($event, item.id_group)">{{ item.name }}</a>
+							</li>
+						</ul>
+						<hr>
+					</div>
+				</div><!-- header group-->
+
+			<div class="float-left box-group-chat">
+				<div *ngFor="let item of groupsItems; let i = index"
+					class="group tabcontent"
+					[style.display]="(i == indexGroupSelected) ? 'block' : 'none'"
+					[attr.data-group-id]="item.id_group"
+					[attr.id]="item.id_group">
+					<div class="messages">
+						<p><strong>Carlos torres</strong>:</p>
+						<p>hola como estas?</p>
+						<p><strong>Monica Sanchez</strong>:</p>
+						<p>hola carlos como estas tú</p>
+						<p><strong>Claudia Ramirez</strong>:</p>
+						<p>hola monica, hola carlos</p>
+						<p></p>
+						<p></p>
+						<p></p>
+						<p></p>
+						<p></p>
+						<p></p>
+						<p></p>
+					</div>
+					<div class="input-data">
+						<div style="position:static">
+							<form action="">
+
+								<div class="input-group">
+									<input type="text" class="form-control" #message>
+									<div class="input-group-append">
+										<button class="btn btn-outline-secondary d-none d-sm-block" type="button">Subir archivo</button>
+										<button type="submit" class="btn btn-primary d-none d-sm-block"
+										(click)="sendMessage($event,
+										{	'id_group_user': idgroupuser.value,
+											'id_group': idgroup.value ,
+											'message': message.value
+										})">Enviar</button>
+									</div>
+								</div>
+
+								<input class="form-control" type="hidden" value="{{id_group_user}}" readonly #idgroupuser>
+								<input class="form-control" type="hidden" value="{{item.id_group}}" readonly #idgroup>
+							</form>
+						</div>
+					</div>
+				</div><!-- tab content -->
+			</div>
+			<div class="float-right box-user-status-chat">
+				<app-online-users [users]="groupUsers"></app-online-users>
+			</div>
+		</div><!-- body group-->
+
 	</div>
 </div>
+

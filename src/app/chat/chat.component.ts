@@ -11,7 +11,7 @@ import * as io from 'socket.io-client';
 @Component({
 	selector: 'app-chat',
 	templateUrl: './chat.component.html',
-	styleUrls: ['./chat.component.scss'],
+	// styleUrls: ['./chat.component.scss'],
 	providers: [GroupuserService, ChatService],
 })
 export class ChatComponent implements OnInit {

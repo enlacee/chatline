@@ -1,43 +1,46 @@
-<section class="container login">
-	<div class="rowed">
-		<div class="row no-gutters">
-			<div class="col-sm">
-				<h1>Sistema de Gestión de Chat en Linea</h1>
-			</div>
-		</div>
-
-		<div class="row no-gutters">
-			<div class="col-sm">
-				<div class="form-wrap">
-					<div *ngIf="ShowLogin">
-						<p class="text-center">Por favor ingrese su usuario y contraseña</p>
-						<form autocomplete="off" (submit)="loginUser($event)">
-							<input *ngIf="isAdmin" type="hidden" name="is-admin"/>
-							<div class="form-group">
-								<label for="email" class="center-label">Usuario</label>
-								<input name="username" type="email" class="form-control" value="jhon@pprios.com" required/>
-							</div>
-							<div class="form-group">
-								<label for="password" class="center-label">Contraseña</label>
-								<input name="password" type="password" class="form-control" value="clavefacil#123" required/>
-							</div>
-							<input type="submit" [class.btn-secondary]="isAdmin" class="btn btn-primary btn-lg btn-block" value="Entrar"/>
-						</form>
-						<a *ngIf="!isAdmin" href="javascript:void(0)" class="link-tab pt-3" (click)="showRecoverPass()">Olvidaste contraseña?</a>
-					</div>
-					<div *ngIf="ShowRecoverPass">
-						<form autocomplete="off" (submit)="recoverPasswordUser($event)">
-							<div class="form-group">
-								<label for="email" class="center-label">Introdusca el correo electrónico</label>
-								<input type="email" class="form-control" required />
-							</div>
-							<input type="submit" class="btn btn-primary btn-lg btn-block" value="Enviar">
-						</form>
-						<a href="javascript:void(0)" class="link-tab pt-3" (click)="showLogin()">Iniciar Sesión</a>
-					</div>
-					<hr>
+<div class="wrap-content">
+	<section class="container login">
+		<div class="rowed">
+			<div class="row no-gutters">
+				<div class="col-sm">
+					<h1>Sistema de Gestión de Chat en Linea</h1>
 				</div>
-			</div> <!-- /.col -->
-		</div> <!-- /.row -->
-	</div>
-</section>
+			</div>
+
+			<div class="row no-gutters">
+				<div class="col-sm">
+					<div class="form-wrap">
+						<div *ngIf="ShowLogin">
+							<p class="text-center">Por favor ingrese su usuario y contraseña</p>
+							<form autocomplete="off" (submit)="loginUser($event)">
+								<input *ngIf="isAdmin" type="hidden" name="is-admin"/>
+								<div class="form-group">
+									<label for="email" class="center-label">Usuario</label>
+									<input name="username" type="email" class="form-control" value="jhon@pprios.com" required/>
+								</div>
+								<div class="form-group">
+									<label for="password" class="center-label">Contraseña</label>
+									<input name="password" type="password" class="form-control" value="clavefacil#123" required/>
+								</div>
+								<input type="submit" [class.btn-secondary]="isAdmin" class="btn btn-primary btn-lg btn-block" value="Entrar"/>
+							</form>
+							<a *ngIf="!isAdmin" href="javascript:void(0)" class="link-tab pt-3" (click)="showRecoverPass()">Olvidaste contraseña?</a>
+						</div>
+						<div *ngIf="ShowRecoverPass">
+							<form autocomplete="off" (submit)="recoverPasswordUser($event)">
+								<div class="form-group">
+									<label for="email" class="center-label">Introdusca el correo electrónico</label>
+									<input type="email" class="form-control" required />
+								</div>
+								<input type="submit" class="btn btn-primary btn-lg btn-block" value="Enviar">
+							</form>
+							<a href="javascript:void(0)" class="link-tab pt-3" (click)="showLogin()">Iniciar Sesión</a>
+						</div>
+						<hr>
+					</div>
+				</div> <!-- /.col -->
+			</div> <!-- /.row -->
+		</div>
+	</section>
+</div>
+
