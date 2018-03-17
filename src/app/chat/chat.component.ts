@@ -95,6 +95,9 @@ export class ChatComponent implements OnInit {
 		this.socket.on('new message', (data) => {
 			console.log("event: new message:", data);
 			this.messagesChat.push(data);
+
+			// set autoscroll
+			this.setAutoScrollGroup(data.message.id_group);
 		});
 	}
 
@@ -211,10 +214,31 @@ export class ChatComponent implements OnInit {
 		var self = event.currentTarget;
 
 		// this.username = this.user.username;
-		// console.log('enviando mensajesss');
-		// this._chatService.sendMessage('hola soy pepe lucho', this.socket);
-		// this.message = '';
 		this.socket.emit('new message', data);
+		this.setAutoScrollGroup(data.id_group);
+	}
+
+	private setAutoScrollGroup(selectorID) {
+		// var messages = document.getElementById('messages');
+		var messages = document.getElementById(selectorID).children[0];
+
+		function getMessages() {
+			// Prior to getting your messages.
+			let shouldScroll = messages.scrollTop + messages.clientHeight === messages.scrollHeight;
+			/*
+			* Get your messages, we'll just simulate it by appending a new one syncronously.
+			*/
+			// After getting your messages.
+			if (!shouldScroll) {
+				scrollToBottom();
+			}
+		}
+
+		function scrollToBottom() {
+			messages.scrollTop = messages.scrollHeight;
+		}
+		// setInterval(getMessages, 100);
+		setTimeout(getMessages, 100);
 	}
 
 }

@@ -33,11 +33,11 @@
 					[style.display]="(i == indexGroupSelected) ? 'block' : 'none'"
 					[attr.data-group-id]="item.id_group"
 					[attr.id]="item.id_group">
-					<div class="messages" id="messages">
+					<div class="messages">
 						<!-- {{messagesChat| json}} -->
 						<!-- {{groupsItems[indexGroupSelected] | json}} -->
 						<!-- <hr> -->
-						<div *ngFor="let messageChat of messagesChat; let i = index">
+						<div *ngFor="let messageChat of messagesChat; let i = index" class="message-line">
 							<div *ngIf="groupsItems[indexGroupSelected].id_group == messageChat.message.id_group">
 								<p><strong>{{ (messageChat.action == 'yo') ? 'Yo' : messageChat.message.name }}</strong>:</p>
 								<p>{{messageChat.message.message}}</p>
