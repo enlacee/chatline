@@ -38,7 +38,8 @@
 						<!-- {{groupsItems[indexGroupSelected] | json}} -->
 						<!-- <hr> -->
 						<div *ngFor="let messageChat of messagesChat; let i = index" class="message-line">
-							<div *ngIf="groupsItems[indexGroupSelected].id_group == messageChat.message.id_group">
+							<div *ngIf="groupsItems[indexGroupSelected].id_group == messageChat.message.id_group"
+							[attr.class]="(user.id_user == messageChat.message.id_user ) ? 'iam' : ''">
 								<p><strong>{{ (messageChat.action == 'yo') ? 'Yo' : messageChat.message.name }}</strong>:</p>
 								<p>{{messageChat.message.message}}</p>
 							</div>

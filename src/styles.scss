@@ -140,7 +140,7 @@
 		.box-group-chat{
 			padding: 0;
 			// background-color: skyblue;
-			width: 85%;
+			width: 80%;
 			height: 90%;
 			@include media-breakpoint-down(sm) {
 				width: 70%;
@@ -160,6 +160,16 @@
 					height: 90%;
 					border:1px solid pink;
 					overflow-y: scroll;
+					.message-line{
+						p {
+							margin-bottom: 0.1em;
+						}
+						div.iam{
+							strong{
+								color:$secondary;
+							}
+						}
+					}
 				}
 				.input-data{
 					position: absolute;
@@ -179,7 +189,7 @@
 		.box-user-status-chat{
 			padding: 0;
 			padding-left: 0.3em;
-			width: 15%;
+			width: 20%;
 			// height: 100%;
 			@include media-breakpoint-down(sm) {
 				width: 30%;
