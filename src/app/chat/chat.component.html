@@ -20,7 +20,7 @@
 								*ngFor="let item of groupsItems; let i = index"
 								[class.active]="(i == indexGroupSelected)"
 								[attr.data-group-id]="item.id_group"
-								(click)="openTheTab($event, item.id_group)">{{ item.name }}</a>
+								(click)="openTheTab($event, item.id_group); indexGroupSelected = i">{{ item.name }}</a>
 							</li>
 						</ul>
 						<hr>
@@ -33,20 +33,16 @@
 					[style.display]="(i == indexGroupSelected) ? 'block' : 'none'"
 					[attr.data-group-id]="item.id_group"
 					[attr.id]="item.id_group">
-					<div class="messages">
-						<p><strong>Carlos torres</strong>:</p>
-						<p>hola como estas?</p>
-						<p><strong>Monica Sanchez</strong>:</p>
-						<p>hola carlos como estas tú</p>
-						<p><strong>Claudia Ramirez</strong>:</p>
-						<p>hola monica, hola carlos</p>
-						<p></p>
-						<p></p>
-						<p></p>
-						<p></p>
-						<p></p>
-						<p></p>
-						<p></p>
+					<div class="messages" id="messages">
+						<!-- {{messagesChat| json}} -->
+						<!-- {{groupsItems[indexGroupSelected] | json}} -->
+						<!-- <hr> -->
+						<div *ngFor="let messageChat of messagesChat; let i = index">
+							<div *ngIf="groupsItems[indexGroupSelected].id_group == messageChat.message.id_group">
+								<p><strong>{{ (messageChat.action == 'yo') ? 'Yo' : messageChat.message.name }}</strong>:</p>
+								<p>{{messageChat.message.message}}</p>
+							</div>
+						</div>
 					</div>
 					<div class="input-data">
 						<div style="position:static">
@@ -58,15 +54,17 @@
 										<button class="btn btn-outline-secondary d-none d-sm-block" type="button">Subir archivo</button>
 										<button type="submit" class="btn btn-primary d-none d-sm-block"
 										(click)="sendMessage($event,
-										{	'id_group_user': idgroupuser.value,
-											'id_group': idgroup.value ,
-											'message': message.value
-										})">Enviar</button>
+										{	'id_user': item.id_user,
+											'id_group': item.id_group ,
+											'id_group_user': idgroupuser.value,
+											'message': message.value,
+											'name': user.firstname
+										}); message.value=''; ">Enviar</button>
 									</div>
 								</div>
 
-								<input class="form-control" type="hidden" value="{{id_group_user}}" readonly #idgroupuser>
-								<input class="form-control" type="hidden" value="{{item.id_group}}" readonly #idgroup>
+								<input class="form-control" type="hidden" value="{{ id_group_user }}" readonly #idgroupuser>
+
 							</form>
 						</div>
 					</div>

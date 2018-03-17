@@ -8,6 +8,7 @@ import { VariableGlobalService } from '../variable-global.service';
 
 import * as io from 'socket.io-client';
 
+
 @Component({
 	selector: 'app-chat',
 	templateUrl: './chat.component.html',
@@ -24,6 +25,7 @@ export class ChatComponent implements OnInit {
 	public dataSocket = [];
 	public statusCode;
 	public id_group_user: number = 0;
+	public messagesChat:any[] = [];
 
 	private socket;
 
@@ -91,11 +93,9 @@ export class ChatComponent implements OnInit {
 
 		// notifica llego mensaje a mi & a otros usuarios
 		this.socket.on('new message', (data) => {
-			console.log("llego los mensajes new message:", data);
+			console.log("event: new message:", data);
+			this.messagesChat.push(data);
 		});
-
-
-
 	}
 
 	private readDataSocket(data){
@@ -146,7 +146,6 @@ export class ChatComponent implements OnInit {
 	 * muestra tab y lista los usuarios que pertenecen al grupo
 	 */
 	openTheTab(event, id_group) {
-		console.log('openTheTab id_group', id_group);
 		var i, tabcontent, tablinks;
 
 		// Get all elements with class="tabcontent" and hide them
@@ -204,12 +203,12 @@ export class ChatComponent implements OnInit {
 			}
 		}
 	}
-
+	// Find *id_group_user* by id_user
 
 
 	sendMessage(event, data) {
 		event.preventDefault();
-		console.log('text', data);
+		var self = event.currentTarget;
 
 		// this.username = this.user.username;
 		// console.log('enviando mensajesss');
