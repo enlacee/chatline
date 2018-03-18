@@ -38,6 +38,7 @@ export class ChatComponent implements OnInit {
 	) {	}
 
 	ngOnInit(): void {
+
 		// load current user
 		this.user = JSON.parse(localStorage.getItem('currentUser'));
 
@@ -112,14 +113,13 @@ export class ChatComponent implements OnInit {
 		// each object
 		Object.keys(data.usernames).map(function(objectKey, index) {
 			var value = data.usernames[objectKey];
-			console.log(value);
-			// each all user and set status
 
+			// each all user and set status
 			if ( self.groupUsers.length > 0) {
 				for (let index = 0; index < self.groupUsers.length; index++) {
-					console.log('===', self.groupUsers[index].id_user, value);
+
 					if (self.groupUsers[index].id_user === value) {
-						self.groupUsers[index].online = true; console.log('TRUEE', self.groupUsers[index]);
+						self.groupUsers[index].online = true;
 					}
 				}
 			}
@@ -148,29 +148,50 @@ export class ChatComponent implements OnInit {
 	/**
 	 * muestra tab y lista los usuarios que pertenecen al grupo
 	 */
-	openTheTab(event, id_group) {
-		var i, tabcontent, tablinks;
+	hideALlTab() {
+		var tabcontent;
 
 		// Get all elements with class="tabcontent" and hide them
 		tabcontent = document.getElementsByClassName("tabcontent");
-		for (i = 0; i < tabcontent.length; i++) {
+		for (var i = 0; i < tabcontent.length; i++) {
 			tabcontent[i].style.display = "none";
 		}
+	}
+	openTheTab(event, id_group) {
+		var tablinks;
+		var self = event.currentTarget;
+		this.hideALlTab();
 
 		// Get all elements with class="tablinks" and remove the class "active"
 		tablinks = document.getElementsByClassName("tablinks");
-		for (i = 0; i < tablinks.length; i++) {
+		for (var i = 0; i < tablinks.length; i++) {
 			tablinks[i].className = tablinks[i].className.replace(" active", "");
 		}
 
 		// Show the current tab, and add an "active" class to the button that opened the tab
 		let containerGroup = document.getElementById(id_group);
 		containerGroup.style.display = "block";
-		event.currentTarget.className += " active";
-
+		self.className += " active";
 
 		// Ajax load (all user into group)
 		this.loadDataGroupUserByGroupId(id_group);
+	}
+	openTabPeer(event, id_group) {
+		// load data chat by user
+		// var data = this.getDataChatUser(idUser);
+		var data = [];
+		var self = event.currentTarget;
+		var tablinks;
+		this.hideALlTab();
+
+		tablinks = document.getElementsByClassName("tablinks");
+
+		// Show the current tab, and add an "active" class to the button that opened the tab
+		let containerGroup = document.getElementById(id_group);
+		containerGroup.style.display = "block";
+		self.className += " active";
+
+		tablinks[tablinks.length-1].text = self.text;
 	}
 
 	// load reset data
@@ -240,5 +261,13 @@ export class ChatComponent implements OnInit {
 		// setInterval(getMessages, 100);
 		setTimeout(getMessages, 100);
 	}
+
+
+	/*
+	***********************
+	*
+	*/
+
+
 
 }

@@ -6,6 +6,7 @@
 					<div class="col-10_ header-left">
 						<h1>Usuario: {{user.firstname + ' ' + user.lastname }} identificado con DNI N {{user.dni}}</h1>
 					</div>
+					<!-- {{user| json}} -->
 					<div class="col-2_ header-right">
 						<p class="close-red">
 							<a href="javascript:void(0)" (click)="logout($event)">Salir</a>
@@ -21,6 +22,9 @@
 								[class.active]="(i == indexGroupSelected)"
 								[attr.data-group-id]="item.id_group"
 								(click)="openTheTab($event, item.id_group); indexGroupSelected = i">{{ item.name }}</a>
+							</li>
+							<li>
+								<a class="btn btn-link tablinks disabled" href="javascript:void(0)"></a>
 							</li>
 						</ul>
 						<hr>
@@ -42,13 +46,13 @@
 							[attr.class]="(user.id_user == messageChat.message.id_user ) ? 'iam' : ''">
 								<p><strong>{{ (messageChat.action == 'yo') ? 'Yo' : messageChat.message.name }}</strong>:</p>
 								<p>{{messageChat.message.message}}</p>
+								<time [attr.datetime]="messageChat.message['date_on_server']">{{messageChat.message['date_on_server'] | amDateFormat:'HH:mm'}}</time>
 							</div>
 						</div>
 					</div>
 					<div class="input-data">
 						<div style="position:static">
 							<form action="">
-
 								<div class="input-group">
 									<input type="text" class="form-control" #message>
 									<div class="input-group-append">
@@ -63,16 +67,53 @@
 										}); message.value=''; ">Enviar</button>
 									</div>
 								</div>
-
 								<input class="form-control" type="hidden" value="{{ id_group_user }}" readonly #idgroupuser>
-
 							</form>
 						</div>
 					</div>
 				</div><!-- tab content -->
+				<div class="group tabcontent" id="peer" style="display:none">
+					<div class="messages">
+						<div class="message-line">
+							<div>
+								<p><strong>pepe</strong></p>
+								<p>hifie</p>
+							</div>
+						</div>
+					</div>
+					<!-- dubplicate  *input-data* -->
+					<div class="input-data">
+						<div style="position:static">
+							<form action="">
+								<div class="input-group">
+									<input type="text" class="form-control" #message>
+									<div class="input-group-append">
+										<button class="btn btn-outline-secondary d-none d-sm-block" type="button">Subir archivo</button>
+										<button type="submit" class="btn btn-primary d-none d-sm-block"
+										(click)="sendMessage($event,{'id_group': 'peer'}); message.value=''; ">Enviar</button>
+									</div>
+								</div>
+								<input class="form-control" type="hidden" value="{{ id_group_user }}" readonly #idgroupuser>
+							</form>
+						</div>
+					</div>
+					<!-- end duplicate -->
+				</div>
 			</div>
 			<div class="float-right box-user-status-chat">
-				<app-online-users [users]="groupUsers"></app-online-users>
+				<!-- <app-online-users [linkeable]="(user.chat_plus === 1) ? true : false" [users]="groupUsers"></app-online-users> -->
+
+				<h2>Contactos ({{ groupUsers.length }})</h2>
+				<ul class="status-user-list">
+					<li *ngFor="let item of groupUsers; let i = index" >
+						<a href="javascript:void(0)" class="btn disabled_"
+							[class.disabled]="(user.chat_plus === 1) ? false : true"
+							(click)="openTabPeer($event, 'peer');">
+							<span class="ico-status" [class.active]="item.online"></span>
+							{{item.firstname + ' '+ item.lastname | truncate:[20, '...']}}
+						</a>
+					</li>
+				</ul>
 			</div>
 		</div><!-- body group-->
 

@@ -23,6 +23,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChatComponent } from './chat/chat.component';
 import { OnlineUsersComponent } from './chat/online-users.component';
 
+import { MomentModule } from 'angular2-moment';
+
 const appRoutes: Routes = [
 	{
 		path: '',
@@ -74,7 +76,8 @@ const appRoutes: Routes = [
 		HttpModule,
 		RouterModule.forRoot(appRoutes, {useHash: false/*, enableTracing: true*/}),
 		FormsModule,
-		ReactiveFormsModule
+		ReactiveFormsModule,
+		MomentModule
 	],
 	providers: [AuthguardfrontGuard, AuthguardGuard, VariableGlobalService],
 	bootstrap: [AppComponent]
