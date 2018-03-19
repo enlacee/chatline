@@ -15,7 +15,7 @@
 				</div>
 				<div class="row">
 					<div class="col-12 list-tab">
-						<ul>
+						<ul class="links-group-chat">
 							<li>
 								<a class="btn btn-link tablinks" href="javascript:void(0)"
 								*ngFor="let item of groupsItems; let i = index"
@@ -23,10 +23,12 @@
 								[attr.data-group-id]="item.id_group"
 								(click)="openTheTab($event, item.id_group); indexGroupSelected = i">{{ item.name }}</a>
 							</li>
-							<li>
-								<a class="btn btn-link tablinks disabled" href="javascript:void(0)"></a>
-							</li>
 						</ul>
+						<!-- <ul class="links-user-chat">
+							<li *ngFor="let item of usersTabItems; let i = index">
+								<a class="btn btn-link tablinks disabled" href="javascript:void(0)">{{ item.title }}</a>
+							</li>
+						</ul> -->
 						<hr>
 					</div>
 				</div><!-- header group-->
@@ -72,12 +74,18 @@
 						</div>
 					</div>
 				</div><!-- tab content -->
-				<div class="group tabcontent" id="peer" style="display:none">
+
+				<div *ngFor="let item of usersTabItems; let i = index"
+					class="group tabcontent"
+					[attr.id]="item.id"
+					[style.display]="(item.id == indexUsersTabSelected) ? 'block' : 'none'" >
 					<div class="messages">
 						<div class="message-line">
 							<div>
-								<p><strong>pepe</strong></p>
-								<p>hifie</p>
+								<p><strong>{{item.title}}</strong></p>
+								<p>item.id {{item.id}}</p>
+								<p>indexUsersTabSelected {{indexUsersTabSelected}}</p>
+
 							</div>
 						</div>
 					</div>
@@ -90,7 +98,7 @@
 									<div class="input-group-append">
 										<button class="btn btn-outline-secondary d-none d-sm-block" type="button">Subir archivo</button>
 										<button type="submit" class="btn btn-primary d-none d-sm-block"
-										(click)="sendMessage($event,{'id_group': 'peer'}); message.value=''; ">Enviar</button>
+										(click)="sendMessage($event, { 'id_group': item.id }); message.value=''; ">Enviar</button>
 									</div>
 								</div>
 								<input class="form-control" type="hidden" value="{{ id_group_user }}" readonly #idgroupuser>
@@ -100,15 +108,15 @@
 					<!-- end duplicate -->
 				</div>
 			</div>
+
 			<div class="float-right box-user-status-chat">
 				<!-- <app-online-users [linkeable]="(user.chat_plus === 1) ? true : false" [users]="groupUsers"></app-online-users> -->
-
 				<h2>Contactos ({{ groupUsers.length }})</h2>
 				<ul class="status-user-list">
 					<li *ngFor="let item of groupUsers; let i = index" >
-						<a href="javascript:void(0)" class="btn disabled_"
+						<a href="javascript:void(0)" class="btn"
 							[class.disabled]="(user.chat_plus === 1) ? false : true"
-							(click)="openTabPeer($event, 'peer');">
+							(click)="openTabPeer($event, 'peer-' + item.id_user );">
 							<span class="ico-status" [class.active]="item.online"></span>
 							{{item.firstname + ' '+ item.lastname | truncate:[20, '...']}}
 						</a>

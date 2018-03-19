@@ -19,8 +19,12 @@ export class ChatComponent implements OnInit {
 
 	@Input() user:User;
 
-	public groupsItems:any[] = [];
+	public groupsItems:any[] = []; // lista de chat de grupos
 	public indexGroupSelected = 0;
+
+	public usersTabItems:any[] = []; // lista de chat de usuarios
+	public indexUsersTabSelected = '';
+
 	public groupUsers:any[] = [];
 	public dataSocket = [];
 	public statusCode;
@@ -35,7 +39,7 @@ export class ChatComponent implements OnInit {
 		private _chatService: ChatService,
 		private _variableGlobal: VariableGlobalService,
 
-	) {	}
+	) { }
 
 	ngOnInit(): void {
 
@@ -176,22 +180,42 @@ export class ChatComponent implements OnInit {
 		// Ajax load (all user into group)
 		this.loadDataGroupUserByGroupId(id_group);
 	}
+
 	openTabPeer(event, id_group) {
-		// load data chat by user
-		// var data = this.getDataChatUser(idUser);
-		var data = [];
 		var self = event.currentTarget;
-		var tablinks;
-		this.hideALlTab();
 
-		tablinks = document.getElementsByClassName("tablinks");
+		// Ocultar paneles cuando son diferentes
+		if (this.indexUsersTabSelected !== id_group) {
+			this.hideALlTab();
 
-		// Show the current tab, and add an "active" class to the button that opened the tab
-		let containerGroup = document.getElementById(id_group);
-		containerGroup.style.display = "block";
-		self.className += " active";
+			// remove bold link
+			const listItems = self.parentNode.parentNode.children;
+			for (let index = 0; index < listItems.length; index++) {
+				const element = listItems[index].children;
+				element[0].style.fontWeight = 'normal';
+			}
+			self.style.fontWeight = 'bold';
+		}
 
-		tablinks[tablinks.length-1].text = self.text;
+		this.addUsersTab(id_group, self);
+	}
+
+	private addUsersTab(idTab, self){
+		var tabData = this.usersTabItems;
+		let dataExist = false;
+		for (let index = 0; index < tabData.length; index++) {
+			if (tabData[index]['id'] === idTab) {
+				dataExist = true;
+				break;
+			}
+		}
+
+		if (dataExist === false) {
+			tabData.push({ id: idTab, title: self.text.trim() });
+			this.usersTabItems = tabData;
+
+		}
+		this.indexUsersTabSelected = idTab;
 	}
 
 	// load reset data
