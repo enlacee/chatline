@@ -13,4 +13,7 @@ export class User {
 	public at_created: Date
 	public at_updated: Date
 	public id_rol: number;
+
+	public tempMessageCounter: number;
+	public tempOnline: number;
 }

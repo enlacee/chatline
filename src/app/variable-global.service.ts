@@ -17,4 +17,15 @@ export class VariableGlobalService {
 		}
 	}
 
+	/**
+	 * Obtener el Numero o numeros del string
+	 * @param stringNumber
+	 * @returns integer | bool
+	 */
+	getNumberFromString(stringNumber = '') {
+		var thenum = stringNumber.replace( /^\D+/g, ''); // replace all leading non-digits with nothing
+
+		return isNaN(parseInt(thenum)) ? false : parseInt(thenum);
+	}
+
 }

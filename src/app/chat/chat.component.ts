@@ -8,7 +8,6 @@ import { VariableGlobalService } from '../variable-global.service';
 
 import * as io from 'socket.io-client';
 
-
 @Component({
 	selector: 'app-chat',
 	templateUrl: './chat.component.html',
@@ -19,13 +18,18 @@ export class ChatComponent implements OnInit {
 
 	@Input() user:User;
 
-	public groupsItems:any[] = []; // lista de chat de grupos
-	public indexGroupSelected = 0;
-
+	// element chat users peer
 	public usersTabItems:any[] = []; // lista de chat de usuarios
 	public indexUsersTabSelected = '';
+	public messagesChatUsers:any[] = [];
 
+	// elements chat groups
+	public groupsItems:any[] = []; // lista de chat de grupos
+	public indexGroupSelected = 0;
+	// public groupUsers:any[] = [];
 	public groupUsers:any[] = [];
+
+	// others
 	public dataSocket = [];
 	public statusCode;
 	public id_group_user: number = 0;
@@ -96,14 +100,65 @@ export class ChatComponent implements OnInit {
 			this.dataSocket = data;
 		});
 
-		// notifica llego mensaje a mi & a otros usuarios
+		// Notifica llegada de mensajes a si mismo & a otros usuarios
 		this.socket.on('new message', (data) => {
 			console.log("event: new message:", data);
-			this.messagesChat.push(data);
+			var stringGroup = data.message.id_group.toString();
+
+			if (stringGroup.indexOf('peer') >= 0) {
+				this.readDataSocketMessage(data);
+				this.messagesChatUsers.push(data);
+			} else {
+				this.messagesChat.push(data);
+			}
 
 			// set autoscroll
 			this.setAutoScrollGroup(data.message.id_group);
 		});
+	}
+
+	private readDataSocketMessage(data) {
+		console.log('readDataSocketMessage /////', data);
+		var self = this;
+		var dataMessage = typeof(data.message) !== 'undefined' ? data.message : false;
+
+		// each object
+		Object.keys(dataMessage).map(function(objectKey, index) {
+			console.log('dataMessage', dataMessage);
+			if ( objectKey === 'id_group') {
+				var theUserID = self._variableGlobal.getNumberFromString(dataMessage[objectKey]);
+
+				//
+				if (data.action === 'chat') {
+					theUserID = dataMessage.id_user;
+				}
+				console.log('theUserIDID', theUserID);
+
+				// each all user and set temp Notification
+				if ( self.groupUsers.length > 0) {
+					for (let index = 0; index < self.groupUsers.length; index++) {
+						let counter = typeof(self.groupUsers[index].tempMessageCounter) === 'undefined'
+							? 0
+							: self.groupUsers[index].tempMessageCounter;
+						if (self.groupUsers[index].id_user === theUserID) {
+							self.groupUsers[index].tempMessageCounter = ++counter;
+						}
+					}
+				}
+			}
+			var value = dataMessage[objectKey];
+			// console.log('objectKey', objectKey, 'index', index, 'value', value);
+		});
+	}
+
+	/**
+	 * Leer variable re-rendizar la variable contador de mensajes
+	 * @param index
+	 * @param item
+	 */
+	trackByHeroes(index: number, item: User ): number {
+
+		return item.tempMessageCounter;
 	}
 
 	private readDataSocket(data){
@@ -130,6 +185,7 @@ export class ChatComponent implements OnInit {
 		});
 
 	}
+
 	private setOfflineToUsers(){
 
 		if ( this.groupUsers.length > 0) {
@@ -161,6 +217,7 @@ export class ChatComponent implements OnInit {
 			tabcontent[i].style.display = "none";
 		}
 	}
+
 	openTheTab(event, id_group) {
 		var tablinks;
 		var self = event.currentTarget;
@@ -181,25 +238,28 @@ export class ChatComponent implements OnInit {
 		this.loadDataGroupUserByGroupId(id_group);
 	}
 
-	openTabPeer(event, id_group) {
+	openTabPeer(event, idSecction) {
 		var self = event.currentTarget;
 
-		// Ocultar paneles cuando son diferentes
-		if (this.indexUsersTabSelected !== id_group) {
-			this.hideALlTab();
+		this.hideALlTab();
 
-			// remove bold link
-			const listItems = self.parentNode.parentNode.children;
-			for (let index = 0; index < listItems.length; index++) {
-				const element = listItems[index].children;
-				element[0].style.fontWeight = 'normal';
-			}
-			self.style.fontWeight = 'bold';
+		// 01: add and remove fontWeight bold to users
+		const listItems = self.parentNode.parentNode.children;
+		for (let index = 0; index < listItems.length; index++) {
+			const element = listItems[index].children;
+			element[0].style.fontWeight = 'normal';
 		}
+		self.style.fontWeight = 'bold';
 
-		this.addUsersTab(id_group, self);
+		// 02: load data chat
+		this.messagesChatUsers = [];
+
+		this.addUsersTab(idSecction, self);
 	}
 
+	/**
+	 * Add tabs and SHOW tab
+	 */
 	private addUsersTab(idTab, self){
 		var tabData = this.usersTabItems;
 		let dataExist = false;
@@ -215,7 +275,13 @@ export class ChatComponent implements OnInit {
 			this.usersTabItems = tabData;
 
 		}
+
 		this.indexUsersTabSelected = idTab;
+
+		// fix when dom element exist
+		if (document.getElementById(idTab)) {
+			document.getElementById(idTab).style.display = "block";
+		}
 	}
 
 	// load reset data
@@ -251,8 +317,6 @@ export class ChatComponent implements OnInit {
 			}
 		}
 	}
-	// Find *id_group_user* by id_user
-
 
 	sendMessage(event, data) {
 		event.preventDefault();
@@ -260,13 +324,12 @@ export class ChatComponent implements OnInit {
 
 		// this.username = this.user.username;
 		this.socket.emit('new message', data);
+		console.log('data', data);
+
 		this.setAutoScrollGroup(data.id_group);
 	}
 
 	private setAutoScrollGroup(selectorID) {
-		// var messages = document.getElementById('messages');
-		var messages = document.getElementById(selectorID).children[0];
-
 		function getMessages() {
 			// Prior to getting your messages.
 			let shouldScroll = messages.scrollTop + messages.clientHeight === messages.scrollHeight;
@@ -282,10 +345,18 @@ export class ChatComponent implements OnInit {
 		function scrollToBottom() {
 			messages.scrollTop = messages.scrollHeight;
 		}
-		// setInterval(getMessages, 100);
-		setTimeout(getMessages, 100);
-	}
 
+		// var messages = document.getElementById('messages');
+		// If exit element (caja de chat en el dom)
+		if (document.getElementById(selectorID)) {
+			var messages = document.getElementById(selectorID).children[0];
+
+			// setInterval(getMessages, 100);
+			setTimeout(getMessages, 100);
+		} else {
+			console.log('no AUTOSCROLLING...!');
+		}
+	}
 
 	/*
 	***********************
