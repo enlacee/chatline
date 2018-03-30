@@ -19,7 +19,6 @@ export class ChatComponent implements OnInit {
 	@Input() user:User;
 
 	// element chat users peer
-	public usersTabItems:any[] = []; // lista de chat de usuarios
 	public indexUsersTabSelected = '';
 	public messagesChatUsers:any[] = [];
 
@@ -102,14 +101,14 @@ export class ChatComponent implements OnInit {
 
 		// Notifica llegada de mensajes a si mismo & a otros usuarios
 		this.socket.on('new message', (data) => {
+			var theData = data.message;
 			console.log("event: new message:", data);
-			var stringGroup = data.message.id_group.toString();
 
-			if (stringGroup.indexOf('peer') >= 0) {
+			if (theData.chatType === 'group') {
+				this.messagesChat.push(data);
+			} else if(theData.chatType === 'user') {
 				this.readDataSocketMessage(data);
 				this.messagesChatUsers.push(data);
-			} else {
-				this.messagesChat.push(data);
 			}
 
 			// set autoscroll
@@ -117,38 +116,39 @@ export class ChatComponent implements OnInit {
 		});
 	}
 
+	/**
+	 * Lee la data que les llega a los usuarios (uno a uno)
+	 * @param data
+	 */
 	private readDataSocketMessage(data) {
-		console.log('readDataSocketMessage /////', data);
 		var self = this;
 		var dataMessage = typeof(data.message) !== 'undefined' ? data.message : false;
+		// console.log('readDataSocketMessage /////', data, this.user.id_user);
 
-		// each object
-		Object.keys(dataMessage).map(function(objectKey, index) {
-			console.log('dataMessage', dataMessage);
-			if ( objectKey === 'id_group') {
-				var theUserID = self._variableGlobal.getNumberFromString(dataMessage[objectKey]);
+		// solo llega este action 'CHAT', al receptor
+		if (data.action === 'chat') {
 
-				//
-				if (data.action === 'chat') {
-					theUserID = dataMessage.id_user;
-				}
-				console.log('theUserIDID', theUserID);
+			Object.keys(dataMessage).map(function(objectKey, index) {
+				if ( objectKey === 'id_group') {
+					// console.log('objectKey', objectKey, dataMessage.emisor);
 
-				// each all user and set temp Notification
-				if ( self.groupUsers.length > 0) {
-					for (let index = 0; index < self.groupUsers.length; index++) {
-						let counter = typeof(self.groupUsers[index].tempMessageCounter) === 'undefined'
-							? 0
-							: self.groupUsers[index].tempMessageCounter;
-						if (self.groupUsers[index].id_user === theUserID) {
-							self.groupUsers[index].tempMessageCounter = ++counter;
+					// each users and set temp Notification
+					if ( self.groupUsers.length > 0) {
+						for (let index = 0; index < self.groupUsers.length; index++) {
+							let counter = typeof(self.groupUsers[index].tempMessageCounter) === 'undefined' ? 0 : self.groupUsers[index].tempMessageCounter;
+
+							// mostrar las notificaciones
+							if (
+								self.user.id_user === dataMessage.receptor &&
+								self.groupUsers[index].id_user === dataMessage.emisor
+							) {
+								self.groupUsers[index].tempMessageCounter = ++counter;
+							}
 						}
 					}
 				}
-			}
-			var value = dataMessage[objectKey];
-			// console.log('objectKey', objectKey, 'index', index, 'value', value);
-		});
+			});
+		}
 	}
 
 	/**
@@ -159,6 +159,17 @@ export class ChatComponent implements OnInit {
 	trackByHeroes(index: number, item: User ): number {
 
 		return item.tempMessageCounter;
+	}
+
+	/**
+	 * resetear el estado online de los usuarios a False
+	 */
+	private setOfflineToUsers(){
+		if ( this.groupUsers.length > 0) {
+			for (let index = 0; index < this.groupUsers.length; index++) {
+				this.groupUsers[index].online = false;
+			}
+		}
 	}
 
 	private readDataSocket(data){
@@ -183,18 +194,12 @@ export class ChatComponent implements OnInit {
 				}
 			}
 		});
-
 	}
 
-	private setOfflineToUsers(){
-
-		if ( this.groupUsers.length > 0) {
-			for (let index = 0; index < this.groupUsers.length; index++) {
-				this.groupUsers[index].online = false;
-			}
-		}
-	}
-
+	/**
+	 * Cerrar sesión
+	 * @param event
+	 */
 	logout(event){
 		event.preventDefault();
 		if (window.confirm("Está seguro de querer salir?")) {
@@ -218,7 +223,12 @@ export class ChatComponent implements OnInit {
 		}
 	}
 
-	openTheTab(event, id_group) {
+	/**
+	 * Mostrar la caja de chat del Grupo
+	 * @param event
+	 * @param idElement
+	 */
+	openTheTab(event, idElement) {
 		var tablinks;
 		var self = event.currentTarget;
 		this.hideALlTab();
@@ -230,61 +240,48 @@ export class ChatComponent implements OnInit {
 		}
 
 		// Show the current tab, and add an "active" class to the button that opened the tab
-		let containerGroup = document.getElementById(id_group);
+		let containerGroup = document.getElementById(idElement);
 		containerGroup.style.display = "block";
 		self.className += " active";
 
 		// Ajax load (all user into group)
-		this.loadDataGroupUserByGroupId(id_group);
-	}
-
-	openTabPeer(event, idSecction) {
-		var self = event.currentTarget;
-
-		this.hideALlTab();
-
-		// 01: add and remove fontWeight bold to users
-		const listItems = self.parentNode.parentNode.children;
-		for (let index = 0; index < listItems.length; index++) {
-			const element = listItems[index].children;
-			element[0].style.fontWeight = 'normal';
-		}
-		self.style.fontWeight = 'bold';
-
-		// 02: load data chat
-		this.messagesChatUsers = [];
-
-		this.addUsersTab(idSecction, self);
+		this.loadDataGroupUserByGroupId(idElement);
 	}
 
 	/**
-	 * Add tabs and SHOW tab
+	 * Mostrar la caja de chat del Usuario
+	 * @param event
+	 * @param data
 	 */
-	private addUsersTab(idTab, self){
-		var tabData = this.usersTabItems;
-		let dataExist = false;
-		for (let index = 0; index < tabData.length; index++) {
-			if (tabData[index]['id'] === idTab) {
-				dataExist = true;
-				break;
+	openTabPeer(event, data) {
+		// console.log('click : openTabPeer() ', data.emisor, data.receptor);
+		var self = event.currentTarget;
+		var showUserChat = function() {
+			if (document.getElementById('user-chat')) {
+				document.getElementById('user-chat').style.display = "block";
 			}
 		}
+		console.log('data', data);
+		this.hideALlTab();
 
-		if (dataExist === false) {
-			tabData.push({ id: idTab, title: self.text.trim() });
-			this.usersTabItems = tabData;
+		// 01: add and remove fontWeight bold to users
+		// const listItems = self.parentNode.parentNode.children;
+		// for (let index = 0; index < listItems.length; index++) {
+		// 	const element = listItems[index].children;
+		// 	element[0].style.fontWeight = 'normal';
+		// }
+		// self.style.fontWeight = 'bold';
 
-		}
-
-		this.indexUsersTabSelected = idTab;
-
-		// fix when dom element exist
-		if (document.getElementById(idTab)) {
-			document.getElementById(idTab).style.display = "block";
-		}
+		// 02: load data chat
+		this.messagesChatUsers = [];
+		this.indexUsersTabSelected = data.receptor;
+		showUserChat();
 	}
 
-	// load reset data
+	/**
+	 * Cargar lista de usuarios por Grupo
+	 * @param id_group
+	 */
 	loadDataGroupUserByGroupId(id_group) {
 		this._groupuserService.getDataGroupById(id_group)
 			.subscribe(article => {
@@ -305,7 +302,10 @@ export class ChatComponent implements OnInit {
 			errorCode =>  this.statusCode = errorCode);
 	}
 
-	// Find *id_group_user* by id_user
+	/**
+	 * Buscar el *id_group_user* por id_user, útil para guardar en DB
+	 * @param data
+	 */
 	private findIdGroupUser(data) {
 		if (typeof(data) !== 'undefined' && data.length > 0) {
 			for (let index = 0; index < data.length; index++) {
@@ -313,22 +313,25 @@ export class ChatComponent implements OnInit {
 					this.id_group_user = data[index].id_group_user;
 					return true;
 				}
-
 			}
 		}
 	}
 
-	sendMessage(event, data) {
+	public sendMessage(event, data) {
+		console.log('sendMessage: data', data);
 		event.preventDefault();
 		var self = event.currentTarget;
 
 		// this.username = this.user.username;
 		this.socket.emit('new message', data);
-		console.log('data', data);
 
 		this.setAutoScrollGroup(data.id_group);
 	}
 
+	/**
+	 * Generar el autoScroll en la caja de chat
+	 * @param selectorID
+	 */
 	private setAutoScrollGroup(selectorID) {
 		function getMessages() {
 			// Prior to getting your messages.
@@ -360,9 +363,5 @@ export class ChatComponent implements OnInit {
 
 	/*
 	***********************
-	*
 	*/
-
-
-
 }

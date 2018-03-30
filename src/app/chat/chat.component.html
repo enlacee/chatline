@@ -1,48 +1,43 @@
 <div class="chatline">
 	<div class="container the-content">
-
 		<div class="box">
 			<div class="row no-gutters_">
-					<div class="col-10_ header-left">
-						<h1>Usuario: {{user.firstname + ' ' + user.lastname }} identificado con DNI N {{user.dni}}</h1>
-					</div>
-					<!-- {{user| json}} -->
-					<div class="col-2_ header-right">
-						<p class="close-red">
-							<a href="javascript:void(0)" (click)="logout($event)">Salir</a>
-						</p>
-					</div>
+				<div class="col-10_ header-left">
+					<h1>Usuario: {{user.firstname + ' ' + user.lastname }} identificado con DNI N {{user.dni}}</h1>
 				</div>
-				<div class="row">
-					<div class="col-12 list-tab">
-						<ul class="links-group-chat">
-							<li>
-								<a class="btn btn-link tablinks" href="javascript:void(0)"
-								*ngFor="let item of groupsItems; let i = index"
-								[class.active]="(i == indexGroupSelected)"
-								[attr.data-group-id]="item.id_group"
-								(click)="openTheTab($event, item.id_group); indexGroupSelected = i">{{ item.name }}</a>
-							</li>
-						</ul>
-						<ul class="links-user-chat">
-							<li *ngFor="let item of usersTabItems; let i = index">
-								<a class="btn btn-link tablinks disabled" href="javascript:void(0)">{{ item.title }}</a>
-							</li>
-						</ul>
-						<hr>
-					</div>
-				</div><!-- header group-->
+				<!-- {{user|json}} -->
+				<div class="col-2_ header-right">
+					<p class="close-red">
+						<a href="javascript:void(0)" (click)="logout($event)">Salir</a>
+					</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12 list-tab">
+					<ul class="links-group-chat">
+						<li>
+							<a class="btn btn-link tablinks" href="javascript:void(0)"
+							*ngFor="let item of groupsItems; let i = index"
+							[class.active]="(i == indexGroupSelected)"
+							[attr.data-group-id]="item.id_group"
+							(click)="openTheTab($event, item.id_group); indexGroupSelected = i">{{ item.name }}</a>
+						</li>
+						<li>
+							<a class="btn btn-link tablinks disabled" href="javascript:void(0)">CHAT USER</a>
+						</li>
+					</ul>
+					<hr>
+				</div>
+			</div><!-- header group-->
 
 			<div class="float-left box-group-chat">
-				<div *ngFor="let item of groupsItems; let i = index"
+				<div *ngFor="let group of groupsItems; let i = index"
 					class="group tabcontent"
 					[style.display]="(i == indexGroupSelected) ? 'block' : 'none'"
-					[attr.data-group-id]="item.id_group"
-					[attr.id]="item.id_group">
+					[attr.data-group-id]="group.id_group"
+					[attr.id]="group.id_group">
 					<div class="messages">
-						<!-- {{messagesChat| json}} -->
-						<!-- {{groupsItems[indexGroupSelected] | json}} -->
-						<!-- <hr> -->
+
 						<div *ngFor="let messageChat of messagesChat; let i = index" class="message-line">
 							<div *ngIf="groupsItems[indexGroupSelected].id_group == messageChat.message.id_group"
 							[attr.class]="(user.id_user == messageChat.message.id_user ) ? 'iam' : ''">
@@ -56,16 +51,21 @@
 						<div style="position:static">
 							<form action="">
 								<div class="input-group">
-									<input type="text" class="form-control" #message>
+									<input type="text" class="form-control" #message required>
 									<div class="input-group-append">
-										<button class="btn btn-outline-secondary d-none d-sm-block" type="button">Subir archivo</button>
+										<span class="btn btn-danger btn-file">
+											Subir<input class="d-none d-sm-block" type="file">
+										</span>
 										<button type="submit" class="btn btn-primary d-none d-sm-block"
-										(click)="sendMessage($event,
-										{	'id_user': item.id_user,
-											'id_group': item.id_group ,
-											'id_group_user': idgroupuser.value,
+										(click)="sendMessage($event, {
+											'emisor': group.id_user,
+											'receptor': group.id_group,
+											'chatType': 'group',
+											'name': user.firstname,
 											'message': message.value,
-											'name': user.firstname
+
+											'id_group': group.id_group ,
+											'id_group_user': idgroupuser.value
 										}); message.value=''; ">Enviar</button>
 									</div>
 								</div>
@@ -76,29 +76,18 @@
 				</div><!-- tab content -->
 
 				<!-- Crear lista  de cuadros de CHAT personal -->
-				{{usersTabItems | json}}
-				{{indexUsersTabSelected | json}}
-				<div *ngFor="let item of usersTabItems; let i = index"
-					class="group tabcontent"
-					[attr.id]="item.id"
-					[style.display]="(item.id == indexUsersTabSelected) ? 'block' : 'none'" >
+				<!-- {{indexUsersTabSelected | json}} -->
+				<div class="group tabcontent" style="border:1px solid rebeccapurple; display:none" id="user-chat">
 					<div class="messages">
 						<div *ngFor="let messageChat of messagesChatUsers; let i = index" class="message-line">
 
-							<div *ngIf="item.id == messageChat.message.id_group"
+							<div *ngIf="messageChat.message.id_group === 'user-chat'"
 							[attr.class]="(user.id_user == messageChat.message.id_user ) ? 'iam' : ''">
 								<p><strong>{{ (messageChat.action == 'yo') ? 'Yo' : messageChat.message.name }}</strong>:</p>
 								<p>{{messageChat.message.message}}</p>
 								<time [attr.datetime]="messageChat.message['date_on_server']">{{messageChat.message['date_on_server'] | amDateFormat:'HH:mm'}}</time>
 							</div>
 						</div>
-<!-- 						<div class="message-line">
-							<div>
-								<p><strong>{{item.title}}</strong></p>
-								<p>item.id {{item.id}}</p>
-								<p>indexUsersTabSelected {{indexUsersTabSelected}}</p>
-							</div>
-						</div> -->
 					</div>
 					<!-- dubplicate  *input-data* -->
 					<div class="input-data">
@@ -107,25 +96,30 @@
 								<div class="input-group">
 									<input type="text" class="form-control" #messageUser>
 									<div class="input-group-append">
-										<button class="btn btn-outline-secondary d-none d-sm-block" type="button">Subir archivo</button>
-										<button type="submit" class="btn btn-primary d-none d-sm-block"
+										<span class="btn btn-danger btn-file">
+											Subir<input class="d-none d-sm-block" type="file">
+										</span>
+										<button type="submit" class="btn btn-secondary d-none d-sm-block"
 										(click)="sendMessage($event, {
-											'id_user': user.id_user,
-											'id_group': indexUsersTabSelected,
-											'id_group_user': '',
+											'emisor': user.id_user,
+											'receptor': indexUsersTabSelected,
+											'chatType': 'user',
+											'name': user.firstname,
 											'message': messageUser.value,
-											'name': user.firstname
+
+											'id_group': 'user-chat',
+											'id_group_user': ''
 										}); messageUser.value=''; ">Enviar User</button>
 									</div>
 								</div>
 								<input class="form-control" type="hidden" value="{{ id_group_user }}" readonly #idgroupuser>
 							</form>
 						</div>
-					</div>
-					<!-- end duplicate -->
+					</div><!-- end duplicate -->
 				</div>
 			</div>
 
+			<!-- {{ groupUsers | json}} -->
 			<div class="float-right box-user-status-chat">
 				<!-- <app-online-users [linkeable]="(user.chat_plus === 1) ? true : false" [users]="groupUsers"></app-online-users> -->
 				<h2>Contactos ({{ groupUsers.length }})</h2>
@@ -133,18 +127,21 @@
 					<li *ngFor="let item of groupUsers; let i = index; trackBy: trackByHeroes" >
 						<a href="javascript:void(0)" class="btn"
 							[class.disabled]="(user.chat_plus === 1) ? false : true"
-							(click)="openTabPeer($event, 'peer-' + item.id_user );">
+							(click)="openTabPeer($event, {
+								emisor: user.id_user,
+								receptor: item.id_user
+							});">
 							<span class="ico-status" [class.active]="item.online"></span>
 							{{item.firstname + ' '+ item.lastname | truncate:[20, '...']}}
 						</a>
-						<span class="ico-message" *ngIf="item.tempMessageCounter > 0">
-							[<a href="javascript:void(0)" (click)="openTabPeer($event, 'peer-' + item.id_user);" ># {{item.tempMessageCounter}}</a>]
-						</span>
+						<a href="javascript:void(0)" class="ico-message" *ngIf="item.tempMessageCounter > 0"
+							(click)="openTabPeer($event, {
+							emisor: user.id_user,
+							receptor: item.id_user
+						});" >[# {{item.tempMessageCounter}}]</a>
 					</li>
 				</ul>
 			</div>
 		</div><!-- body group-->
-
 	</div>
 </div>
-
