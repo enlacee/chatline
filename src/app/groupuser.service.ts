@@ -27,9 +27,11 @@ export class GroupuserService {
 			.map(res => res.json());
 			//    .catch(this.handleError);
 	}
-	public getDataGroupById(articleId: string): Observable<ArrayConstructor> {
+	public getDataGroupById(articleId: string, id_user): Observable<ArrayConstructor> {
 
-		return this._http.get(this.apiURL, {params: {'id_group': articleId}})
+		return this._http.get(this.apiURL, {params:
+			{'id_group': articleId, 'except_id_user': id_user}
+		})
 			.map(res => res.json());
 	}
 	//Create article

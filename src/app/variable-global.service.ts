@@ -28,4 +28,24 @@ export class VariableGlobalService {
 		return isNaN(parseInt(thenum)) ? false : parseInt(thenum);
 	}
 
+	/**
+	 * Genera string para concatenar a una URL tipo GET
+	 * @param data
+	 */
+	createURLGet(data = {}) {
+		let str = '';
+		if (typeof(data) === 'object') {
+			Object.keys(data).map(function(objectKey, index) {
+				console.log('index', index);
+				if (index === 0) {
+					str += '?' + objectKey + '=' + data[objectKey]
+				} else {
+					str += '&' + objectKey + '=' + data[objectKey]
+				}
+			});
+		}
+
+		return str;
+	}
+
 }

@@ -28,6 +28,13 @@ export class UserService {
 			.map(res => res.json());
 	}
 
+	// Fetch All
+	getDataDiccionary() {
+
+		return this._http.get(this.apiURL + '-diccionary')
+			.map(res => res.json());
+	}
+
 	// Basic authenticate
 	login(formdata) {
 		return this._http.post(this._variableGlobal.apiURL + '/users-login', formdata)

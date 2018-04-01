@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 import { GroupuserService } from '../groupuser.service';
 import { ChatService } from '../chat.service';
+import { UserService } from '../user.service';
 import { VariableGlobalService } from '../variable-global.service';
 
 import * as io from 'socket.io-client';
@@ -12,11 +13,12 @@ import * as io from 'socket.io-client';
 	selector: 'app-chat',
 	templateUrl: './chat.component.html',
 	// styleUrls: ['./chat.component.scss'],
-	providers: [GroupuserService, ChatService],
+	providers: [GroupuserService, ChatService, UserService],
 })
 export class ChatComponent implements OnInit {
 
 	@Input() user:User;
+	@Input() userDiccinary:any[] = [];
 
 	// element chat users peer
 	public indexUsersTabSelected = '';
@@ -40,6 +42,7 @@ export class ChatComponent implements OnInit {
 		private _router: Router,
 		private _groupuserService: GroupuserService,
 		private _chatService: ChatService,
+		private _userService: UserService,
 		private _variableGlobal: VariableGlobalService,
 
 	) { }
@@ -48,6 +51,12 @@ export class ChatComponent implements OnInit {
 
 		// load current user
 		this.user = JSON.parse(localStorage.getItem('currentUser'));
+
+		// load all user (like diccionary)
+		this._userService.getDataDiccionary().subscribe(result => {
+			this.userDiccinary = result
+
+		});
 
 		// load groups
 		this._chatService.getlistGroupByIdUser(
@@ -143,6 +152,9 @@ export class ChatComponent implements OnInit {
 								self.groupUsers[index].id_user === dataMessage.emisor
 							) {
 								self.groupUsers[index].tempMessageCounter = ++counter;
+								// console.log('CONTADOR', self.groupUsers[index]);
+							} else {
+								// console.log('ELSE CONTADOR');
 							}
 						}
 					}
@@ -263,6 +275,7 @@ export class ChatComponent implements OnInit {
 		}
 		console.log('data', data);
 		this.hideALlTab();
+		this.messagesChatUsers = [];
 
 		// 01: add and remove fontWeight bold to users
 		// const listItems = self.parentNode.parentNode.children;
@@ -273,9 +286,35 @@ export class ChatComponent implements OnInit {
 		// self.style.fontWeight = 'bold';
 
 		// 02: load data chat
-		this.messagesChatUsers = [];
+		this._chatService.getMessages(data).subscribe(
+			result => {
+				console.log(typeof(result));
+				if (typeof(result) === 'object') {
+					result.forEach(element => {
+
+						this.messagesChatUsers.push({
+							message: {
+								'emisor': element['id_emisor'],
+								'receptor': element['id_emisor'],
+								'message': element['text'],
+								'id_group': 'user-chat',
+								'at_created': element['at_created']
+							}}
+						);
+					});
+				} else {
+					alert('ocurrio un error al enviar mensaje x1');
+				}
+			}
+		);
+
+		// this.messagesChatUsers = [];
+		// console.log('this.messagesChatUsers', this.messagesChatUsers);
 		this.indexUsersTabSelected = data.receptor;
 		showUserChat();
+
+		// set autoscroll
+		this.setAutoScrollGroup('user-chat');
 	}
 
 	/**
@@ -283,7 +322,8 @@ export class ChatComponent implements OnInit {
 	 * @param id_group
 	 */
 	loadDataGroupUserByGroupId(id_group) {
-		this._groupuserService.getDataGroupById(id_group)
+
+		this._groupuserService.getDataGroupById(id_group, this.user.id_user)
 			.subscribe(article => {
 				// find index
 				this.findIdGroupUser(article);
@@ -317,15 +357,32 @@ export class ChatComponent implements OnInit {
 		}
 	}
 
+	/**
+	 *
+	 * @param event
+	 * @param Object data message detail
+	 */
 	public sendMessage(event, data) {
-		console.log('sendMessage: data', data);
 		event.preventDefault();
 		var self = event.currentTarget;
 
 		// this.username = this.user.username;
-		this.socket.emit('new message', data);
+		console.log('sendMessage: data', data);
+		// this.socket.emit('new message', data);
+		this._chatService.sendMessage(data).subscribe(
+			result => {
+				if (result > 0) {
+					console.log('se registro afecto filas ' + result);
 
-		this.setAutoScrollGroup(data.id_group);
+					// on socket
+					this.socket.emit('new message', data);
+				} else {
+					alert('ocurrio un error al enviar mensaje');
+				}
+			}
+		);
+
+		// this.setAutoScrollGroup(data.id_group);
 	}
 
 	/**

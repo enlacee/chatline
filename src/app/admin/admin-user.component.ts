@@ -429,7 +429,7 @@ export class AdminUserComponent  implements OnInit {
 	}
 	// load reset data
 	loadDataGroupUserByGroupId(id_group) {
-		this._groupuserService.getDataGroupById(id_group)
+		this._groupuserService.getDataGroupById(id_group, '')
 			.subscribe(article => {
 				this.dataOpenTheTab = article;
 			},

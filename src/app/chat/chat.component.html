@@ -43,7 +43,7 @@
 							[attr.class]="(user.id_user == messageChat.message.id_user ) ? 'iam' : ''">
 								<p><strong>{{ (messageChat.action == 'yo') ? 'Yo' : messageChat.message.name }}</strong>:</p>
 								<p>{{messageChat.message.message}}</p>
-								<time [attr.datetime]="messageChat.message['date_on_server']">{{messageChat.message['date_on_server'] | amDateFormat:'HH:mm'}}</time>
+								<time [attr.datetime]="messageChat.message['at_created']">{{messageChat.message['at_created'] | amDateFormat:'HH:mm'}}</time>
 							</div>
 						</div>
 					</div>
@@ -64,12 +64,10 @@
 											'name': user.firstname,
 											'message': message.value,
 
-											'id_group': group.id_group ,
-											'id_group_user': idgroupuser.value
+											'id_group': group.id_group
 										}); message.value=''; ">Enviar</button>
 									</div>
 								</div>
-								<input class="form-control" type="hidden" value="{{ id_group_user }}" readonly #idgroupuser>
 							</form>
 						</div>
 					</div>
@@ -83,9 +81,10 @@
 
 							<div *ngIf="messageChat.message.id_group === 'user-chat'"
 							[attr.class]="(user.id_user == messageChat.message.id_user ) ? 'iam' : ''">
-								<p><strong>{{ (messageChat.action == 'yo') ? 'Yo' : messageChat.message.name }}</strong>:</p>
+								<p><strong>{{ (messageChat.message.emisor == user.id_user) ? 'Yo' : userDiccinary[messageChat.message.emisor].firstname }}</strong>:</p>
+								<!-- <p><strong>{{ (messageChat.action == 'yo') ? 'Yo' : messageChat.message.name }}</strong>:</p> -->
 								<p>{{messageChat.message.message}}</p>
-								<time [attr.datetime]="messageChat.message['date_on_server']">{{messageChat.message['date_on_server'] | amDateFormat:'HH:mm'}}</time>
+								<time [attr.datetime]="messageChat.message['at_created']">{{messageChat.message['at_created'] | amDateFormat:'HH:mm'}}</time>
 							</div>
 						</div>
 					</div>
@@ -107,26 +106,24 @@
 											'name': user.firstname,
 											'message': messageUser.value,
 
-											'id_group': 'user-chat',
-											'id_group_user': ''
+											'id_group': 'user-chat'
 										}); messageUser.value=''; ">Enviar User</button>
 									</div>
 								</div>
-								<input class="form-control" type="hidden" value="{{ id_group_user }}" readonly #idgroupuser>
 							</form>
 						</div>
 					</div><!-- end duplicate -->
 				</div>
 			</div>
 
-			<!-- {{ groupUsers | json}} -->
+			<!-- {{ userDiccinary | json}} -->
 			<div class="float-right box-user-status-chat">
 				<!-- <app-online-users [linkeable]="(user.chat_plus === 1) ? true : false" [users]="groupUsers"></app-online-users> -->
 				<h2>Contactos ({{ groupUsers.length }})</h2>
 				<ul class="status-user-list">
 					<li *ngFor="let item of groupUsers; let i = index; trackBy: trackByHeroes" >
 						<a href="javascript:void(0)" class="btn"
-							[class.disabled]="(user.chat_plus === 1) ? false : true"
+							[class.disabled]="(user.chat_plus === 1 || item.counter_messages > 0) ? false : true"
 							(click)="openTabPeer($event, {
 								emisor: user.id_user,
 								receptor: item.id_user
