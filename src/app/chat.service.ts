@@ -51,7 +51,7 @@ export class ChatService {
 	}
 
 	/**
-	 * Obtener los mensajes
+	 * Obtener los mensajes del usuario
 	 * @param data
 	 */
 	public getMessages(data = {}) {
@@ -59,7 +59,21 @@ export class ChatService {
 		let options = new RequestOptions({ headers: this.headerType, params: {} });
 		let urlParam = this._variableGlobal.createURLGet(data);
 
-		// console.log('urlParam', this._variableGlobal.apiURL + '/messages' + urlParam);
+		console.log('urlParam', this._variableGlobal.apiURL + '/messages' + urlParam);
+		return this._http.get(this._variableGlobal.apiURL + '/messages' + urlParam)
+			.map(res => res.json());
+	}
+
+	/**
+	 * Obtener los mensajes del grupo
+	 * @param data
+	 */
+	public getMessagesGroup(data = {}) {
+		// let options = new RequestOptions({ headers: this.headerType });
+		let options = new RequestOptions({ headers: this.headerType, params: {} });
+		let urlParam = this._variableGlobal.createURLGet(data);
+
+		console.log('urlParam', this._variableGlobal.apiURL + '/messages' + urlParam);
 		return this._http.get(this._variableGlobal.apiURL + '/messages' + urlParam)
 			.map(res => res.json());
 	}

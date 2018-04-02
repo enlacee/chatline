@@ -41,7 +41,7 @@
 						<div *ngFor="let messageChat of messagesChat; let i = index" class="message-line">
 							<div *ngIf="groupsItems[indexGroupSelected].id_group == messageChat.message.id_group"
 							[attr.class]="(user.id_user == messageChat.message.id_user ) ? 'iam' : ''">
-								<p><strong>{{ (messageChat.action == 'yo') ? 'Yo' : messageChat.message.name }}</strong>:</p>
+								<p><strong>{{ (messageChat.action == 'yo') ? 'Yo' : userDiccinary[messageChat.message.emisor].firstname }}</strong>:</p>
 								<p>{{messageChat.message.message}}</p>
 								<time [attr.datetime]="messageChat.message['at_created']">{{messageChat.message['at_created'] | amDateFormat:'HH:mm'}}</time>
 							</div>
@@ -54,7 +54,8 @@
 									<input type="text" class="form-control" #message required>
 									<div class="input-group-append">
 										<span class="btn btn-danger btn-file">
-											Subir<input class="d-none d-sm-block" type="file">
+											Subir<input type="file" (change)="fileChange($event)" placeholder="Upload file"
+											class="d-none d-sm-block">
 										</span>
 										<button type="submit" class="btn btn-primary d-none d-sm-block"
 										(click)="sendMessage($event, {

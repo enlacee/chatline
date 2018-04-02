@@ -258,6 +258,7 @@ export class ChatComponent implements OnInit {
 
 		// Ajax load (all user into group)
 		this.loadDataGroupUserByGroupId(idElement);
+		this.loadDataMessageByGroupId(idElement);
 	}
 
 	/**
@@ -343,6 +344,39 @@ export class ChatComponent implements OnInit {
 	}
 
 	/**
+	 * Obtener el listado de mensajes por grupo
+	 * @param id_group
+	 */
+	private loadDataMessageByGroupId(id_group) {
+		var self = this;
+		self.messagesChat = [];
+
+		// 02: load data chat
+		this._chatService.getMessagesGroup({ 'id_group': id_group }).subscribe(
+			result => {
+				if (typeof(result) === 'object') {
+					result.forEach(element => {
+						if (typeof(result) === 'object') {
+							result.forEach(element => {
+
+								self.messagesChat.push({
+									message: {
+										'emisor': element['id_emisor'],
+										'receptor': '',
+										'message': element['text'],
+										'id_group': element['id_group'],
+										'at_created': element['at_created']
+									}}
+								);
+							});
+						}
+					});
+				}
+			}
+		);
+	}
+
+	/**
 	 * Buscar el *id_group_user* por id_user, útil para guardar en DB
 	 * @param data
 	 */
@@ -421,4 +455,7 @@ export class ChatComponent implements OnInit {
 	/*
 	***********************
 	*/
+	public fileChange(event) {
+
+	}
 }
