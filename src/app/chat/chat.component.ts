@@ -456,6 +456,21 @@ export class ChatComponent implements OnInit {
 	***********************
 	*/
 	public fileChange(event) {
+		let fileList: FileList = event.target.files;
+		console.log('fileList', fileList.length);
+		if (fileList.length > 0) {
+			let file: File = fileList[0];
+			console.log('file', file);
+			let formData:FormData = new FormData();
+			formData.append('uploads', file, file.name);
+			console.log('formData ANTES', formData.get('uploads'));
+			this._chatService.uploadFile(formData).subscribe(
+				result => {
+					console.log('result IMAGEN', result);
+				}
+			);
 
+		}
 	}
+
 }

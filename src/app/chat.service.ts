@@ -77,4 +77,21 @@ export class ChatService {
 		return this._http.get(this._variableGlobal.apiURL + '/messages' + urlParam)
 			.map(res => res.json());
 	}
+
+	/**
+	 * subir imagen
+	 * @param medaData
+	 */
+	public uploadFile(formData) {
+		console.log('formData DESPUES', formData.get('uploads'));
+		let headers = new Headers();
+		/** No need to include Content-Type in Angular 4 */
+		headers.append('Content-Type', 'multipart/form-data');
+		headers.append('Accept', 'application/json');
+		// headers.append('Access-Control-Allow-Origin', '*');
+		let options = new RequestOptions({ headers: headers });
+
+		return this._http.post(this._variableGlobal.apiURL + '/upload-file', formData, options)
+			.map(res => res.json());
+	}
 }
