@@ -111,11 +111,17 @@ export class ChatComponent implements OnInit {
 		// Notifica llegada de mensajes a si mismo & a otros usuarios
 		this.socket.on('new message', (data) => {
 			var theData = data.message;
-			console.log("event: new message:", data);
+			var localEmisor = this.user.id_user;
+			console.log("escuchando :event: new message:", data);
 
 			if (theData.chatType === 'group') {
 				this.messagesChat.push(data);
-			} else if(theData.chatType === 'user') {
+
+			// condicion para usuarios (chat) (solo enviar mensajes al emisor a receptor)
+			} else if(
+				theData.chatType === 'user' &&
+				(theData.emisor === localEmisor || theData.receptor === localEmisor)
+			) {
 				this.readDataSocketMessage(data);
 				this.messagesChatUsers.push(data);
 			}
@@ -392,7 +398,7 @@ export class ChatComponent implements OnInit {
 	}
 
 	/**
-	 *
+	 * Funcion usada para enviar mensaje por grupo y por usuario
 	 * @param event
 	 * @param Object data message detail
 	 */
