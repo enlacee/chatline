@@ -78,21 +78,33 @@ export class LoginFormComponent {
 	// recover password
 	recoverPasswordUser(event) {
 		event.preventDefault();
+		
 		var form = event.target;
 		var formdat = new FormData();
 		var validation = false;
+		var domButton = form.querySelector('button');
 
-		if ( this._variableGlobal.validateEmail(form.email.value) === true ) {
+		if ( form.email.value.length >= 3 && this._variableGlobal.validateEmail(form.email.value) === true ) {
 			formdat.append('email', form.email.value);
+			domButton.disabled = true;
+			domButton.innerHTML = domButton.getAttribute('data-loading-text');
 
 			// send post
 			this._usersService.forgotPassword(formdat).subscribe(
 				result => {
-					console.log('result forgot password', result);
-					alert('Danos unos segundos estamos enviandote un correo');
+					domButton.disabled = false;
+					domButton.innerHTML = 'Enviar';
+					form.email.value = '';
+
+					if (result === true) {
+						alert('Danos unos segundos estamos enviandote un correo');
+					} else {
+						alert('Usuario no encontrado');
+					}
 				}
 			);
 		} else {
+			domButton.disabled = false;
 			alert('El formato del correo es incorrecto');
 		}
 	}
