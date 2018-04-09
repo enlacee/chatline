@@ -4,8 +4,8 @@ import { Injectable } from '@angular/core';
 
 export class VariableGlobalService {
 
-	public apiURL:string = 'http://local.chatlineapi.com/v1';
-	public apiURLsocket: string = 'http://local.chatlineapi.com:2020';
+	public apiURL:string = 'http://192.168.1.40:8080/v1';
+	public apiURLsocket: string = 'http://192.168.1.40:2020';
 
 	constructor() {	}
 
@@ -46,6 +46,11 @@ export class VariableGlobalService {
 		}
 
 		return str;
+	}
+
+	validateEmail(email) {
+		var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+		return re.test(String(email).toLowerCase());
 	}
 
 }

@@ -3,6 +3,8 @@ import { UserService } from '../user.service';
 import { Subscriber } from 'rxjs/Subscriber';
 import { Router } from '@angular/router';
 
+import { VariableGlobalService } from '../variable-global.service';
+
 @Component({
 	selector: 'app-login-form',
 	templateUrl: './login-form.component.html',
@@ -19,7 +21,11 @@ export class LoginFormComponent {
 	public users;
 	public errorMessage;
 
-	constructor(private _usersService: UserService, private _router: Router) {
+	constructor(
+		private _usersService: UserService, 
+		private _router: Router,
+		private _variableGlobal: VariableGlobalService
+	) {
 		this.ShowLogin = true;
 		this.ShowRecoverPass = false;
 	}
@@ -72,6 +78,23 @@ export class LoginFormComponent {
 	// recover password
 	recoverPasswordUser(event) {
 		event.preventDefault();
+		var form = event.target;
+		var formdat = new FormData();
+		var validation = false;
+
+		if ( this._variableGlobal.validateEmail(form.email.value) === true ) {
+			formdat.append('email', form.email.value);
+
+			// send post
+			this._usersService.forgotPassword(formdat).subscribe(
+				result => {
+					console.log('result forgot password', result);
+					alert('Danos unos segundos estamos enviandote un correo');
+				}
+			);
+		} else {
+			alert('El formato del correo es incorrecto');
+		}
 	}
 
 	// function to show content

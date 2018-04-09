@@ -40,6 +40,10 @@ export class UserService {
 		return this._http.post(this._variableGlobal.apiURL + '/users-login', formdata)
 			.map(res => res.json());
 	}
+	forgotPassword(formdata) {
+		return this._http.post(this._variableGlobal.apiURL + '/users-forgot-password', formdata)
+			.map(res => res.json());
+	}
 
 	// Fetch by id
 	public getArticleById(articleId: string): Observable<User> {

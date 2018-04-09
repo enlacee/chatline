@@ -30,9 +30,9 @@
 							<form autocomplete="off" (submit)="recoverPasswordUser($event)">
 								<div class="form-group">
 									<label for="email" class="center-label">Introdusca el correo electrónico</label>
-									<input type="email" class="form-control" required />
+									<input type="email" name="email" class="form-control" required />
 								</div>
-								<input type="submit" class="btn btn-primary btn-lg btn-block" value="Enviar">
+								<button class="btn btn-primary btn-lg btn-block">Enviar</button>
 							</form>
 							<a href="javascript:void(0)" class="link-tab pt-3" (click)="showLogin()">Iniciar Sesión</a>
 						</div>
