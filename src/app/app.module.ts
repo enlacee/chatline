@@ -24,6 +24,7 @@ import { ChatComponent } from './chat/chat.component';
 import { OnlineUsersComponent } from './chat/online-users.component';
 
 import { MomentModule } from 'angular2-moment';
+import { MarkdownModule } from 'ngx-markdown';
 
 const appRoutes: Routes = [
 	{
@@ -77,7 +78,8 @@ const appRoutes: Routes = [
 		RouterModule.forRoot(appRoutes, {useHash: false/*, enableTracing: true*/}),
 		FormsModule,
 		ReactiveFormsModule,
-		MomentModule
+		MomentModule,
+		MarkdownModule.forRoot(),
 	],
 	providers: [AuthguardfrontGuard, AuthguardGuard, VariableGlobalService],
 	bootstrap: [AppComponent]

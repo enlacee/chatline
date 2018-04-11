@@ -42,7 +42,7 @@
 							<div *ngIf="groupsItems[indexGroupSelected].id_group == messageChat.message.id_group"
 							[attr.class]="(user.id_user == messageChat.message.emisor) ? 'iam' : ''">
 								<p class="author"><strong>{{ (messageChat.action == 'yo' || user.id_user == messageChat.message.emisor) ? 'Yo' : userDiccinary[messageChat.message.emisor].firstname }}</strong>:</p>
-								<p>{{messageChat.message.message}}</p>
+								<p markdown [data]="messageChat.message.message"></p>
 								<time [attr.datetime]="messageChat.message['at_created']">{{messageChat.message['at_created'] | amDateFormat:'HH:mm'}}</time>
 							</div>
 						</div>
@@ -93,7 +93,7 @@
 							[attr.class]="(user.id_user == messageChat.message.id_user ) ? 'iam' : ''">
 								<p><strong>{{ (messageChat.message.emisor == user.id_user) ? 'Yo' : userDiccinary[messageChat.message.emisor].firstname }}</strong>:</p>
 								<!-- <p><strong>{{ (messageChat.action == 'yo') ? 'Yo' : messageChat.message.name }}</strong>:</p> -->
-								<p>{{messageChat.message.message}}</p>
+								<p markdown [data]="messageChat.message.message"></p>
 								<time [attr.datetime]="messageChat.message['at_created']">{{messageChat.message['at_created'] | amDateFormat:'HH:mm'}}</time>
 							</div>
 						</div>

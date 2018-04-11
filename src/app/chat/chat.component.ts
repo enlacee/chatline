@@ -58,6 +58,11 @@ export class ChatComponent implements OnInit {
 			this.userDiccinary = result
 		});
 
+		// listener js (open url on tab)
+		this._variableGlobal.delegate(document, "click", ".messages a", function(event) {
+			this.setAttribute("target", "_blank");
+		});
+
 		// load groups
 		this._chatService.getlistGroupByIdUser(
 				[{'id': 'id_user', 'value': this.user.id_user}]
@@ -265,8 +270,6 @@ export class ChatComponent implements OnInit {
 			self.className += " active";
 		}
 
-
-
 		// Show the current tab, and add an "active" class to the button that opened the tab
 		document.getElementById(idElement).style.display = "block";
 
@@ -377,22 +380,18 @@ export class ChatComponent implements OnInit {
 		// 02: load data chat
 		this._chatService.getMessagesGroup({ 'id_group': id_group }).subscribe(
 			result => {
+
 				if (typeof(result) === 'object') {
 					result.forEach(element => {
-						if (typeof(result) === 'object') {
-							result.forEach(element => {
-
-								self.messagesChat.push({
-									message: {
-										'emisor': element['id_emisor'],
-										'receptor': '',
-										'message': element['text'],
-										'id_group': element['id_group'],
-										'at_created': element['at_created']
-									}}
-								);
-							});
-						}
+						self.messagesChat.push({
+							message: {
+								'emisor': element['id_emisor'],
+								'receptor': '',
+								'message': element['text'],
+								'id_group': element['id_group'],
+								'at_created': element['at_created']
+							}}
+						);
 					});
 				}
 			}
@@ -494,8 +493,8 @@ export class ChatComponent implements OnInit {
 
 					if (result.length > 0) {
 						let microData = [];
-
-						let linkFile = '![' + result[0].name + '](' + this._variableGlobal.apiURLBase + result[0].url + ')';
+						let linkFile = '[' + result[0].name + '](' + this._variableGlobal.apiURLBase + result[0].url + ')';
+						
 						microDataMessage.message = linkFile;
 						self.sendMessage(false, microDataMessage);
 					} else {
