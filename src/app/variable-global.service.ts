@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 
 export class VariableGlobalService {
 
+	public apiURLBase:string = 'http://192.168.1.40:8080';
 	public apiURL:string = 'http://192.168.1.40:8080/v1';
 	public apiURLsocket: string = 'http://192.168.1.40:2020';
 
