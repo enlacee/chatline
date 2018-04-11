@@ -50,12 +50,12 @@ export class ChatComponent implements OnInit {
 	ngOnInit(): void {
 
 		// load current user
+		var self = this;
 		this.user = JSON.parse(localStorage.getItem('currentUser'));
 
 		// load all user (like diccionary)
 		this._userService.getDataDiccionary().subscribe(result => {
 			this.userDiccinary = result
-
 		});
 
 		// load groups
@@ -71,13 +71,23 @@ export class ChatComponent implements OnInit {
 							this.groupsItems[this.indexGroupSelected].id_group
 						);
 					}
-					console.log('this.groupsItems', this.groupsItems);
-					// load tab
+					console.log('this.groupsItems', this.groupsItems); 
+
+					// load tab cargar mensajes de sala de chat (seleccionado)
+					setTimeout(function(){
+						let idGroup = self.groupsItems[self.indexGroupSelected].id_group;
+						self.openTheTab(event, idGroup);
+
+						// set autoscroll
+						self.setAutoScrollGroup(idGroup);
+					}, 1300);
+					
 				},
 				error => {
 					alert("Error en la petición user");
 				}
 			);
+
 
 		// start socket connect (LOGIN SOCKET)
 		this.socket = io(this._variableGlobal.apiURLsocket);
@@ -243,28 +253,37 @@ export class ChatComponent implements OnInit {
 
 	/**
 	 * Mostrar la caja de chat del Grupo
-	 * @param event
+	 * @param event Event OR false
 	 * @param idElement
 	 */
 	openTheTab(event, idElement) {
-		var tablinks;
-		var self = event.currentTarget;
+		var self = typeof(event) === 'object' ? event.currentTarget : false ;
 		this.hideALlTab();
 
-		// Get all elements with class="tablinks" and remove the class "active"
-		tablinks = document.getElementsByClassName("tablinks");
-		for (var i = 0; i < tablinks.length; i++) {
-			tablinks[i].className = tablinks[i].className.replace(" active", "");
+		if (self !== false) {
+			this.removeActiveTab();
+			self.className += " active";
 		}
 
+
+
 		// Show the current tab, and add an "active" class to the button that opened the tab
-		let containerGroup = document.getElementById(idElement);
-		containerGroup.style.display = "block";
-		self.className += " active";
+		document.getElementById(idElement).style.display = "block";
 
 		// Ajax load (all user into group)
 		this.loadDataGroupUserByGroupId(idElement);
 		this.loadDataMessageByGroupId(idElement);
+	}
+
+	/**
+	 * Get all elements with class="tablinks" and remove the class "active"
+	 */
+	private removeActiveTab() {
+
+		var tablinks = document.getElementsByClassName("tablinks");
+		for (var i = 0; i < tablinks.length; i++) {
+			tablinks[i].className = tablinks[i].className.replace(" active", "");
+		}
 	}
 
 	/**
@@ -273,15 +292,14 @@ export class ChatComponent implements OnInit {
 	 * @param data
 	 */
 	openTabPeer(event, data) {
-		// console.log('click : openTabPeer() ', data.emisor, data.receptor);
 		var self = event.currentTarget;
 		var showUserChat = function() {
 			if (document.getElementById('user-chat')) {
 				document.getElementById('user-chat').style.display = "block";
 			}
 		}
-		console.log('data', data);
 		this.hideALlTab();
+		this.removeActiveTab();
 		this.messagesChatUsers = [];
 
 		// 01: add and remove fontWeight bold to users
@@ -315,7 +333,6 @@ export class ChatComponent implements OnInit {
 			}
 		);
 
-		// this.messagesChatUsers = [];
 		// console.log('this.messagesChatUsers', this.messagesChatUsers);
 		this.indexUsersTabSelected = data.receptor;
 		showUserChat();
@@ -403,9 +420,10 @@ export class ChatComponent implements OnInit {
 	 * @param Object data message detail
 	 */
 	public sendMessage(event, data) {
-		event.preventDefault();
-		var self = event.currentTarget;
-
+		if (typeof(event) == 'object') {
+			event.preventDefault();
+		}
+		
 		// this.username = this.user.username;
 		console.log('sendMessage: data', data);
 		// this.socket.emit('new message', data);
@@ -427,9 +445,10 @@ export class ChatComponent implements OnInit {
 
 	/**
 	 * Generar el autoScroll en la caja de chat
+	 * se usa en el fron ONETIME (al selecionar una sala)
 	 * @param selectorID
 	 */
-	private setAutoScrollGroup(selectorID) {
+	public setAutoScrollGroup(selectorID) {
 		function getMessages() {
 			// Prior to getting your messages.
 			let shouldScroll = messages.scrollTop + messages.clientHeight === messages.scrollHeight;
@@ -461,22 +480,30 @@ export class ChatComponent implements OnInit {
 	/*
 	***********************
 	*/
-	public fileChange(event) {
-		let fileList: FileList = event.target.files;
-		console.log('fileList', fileList.length);
-		if (fileList.length > 0) {
-			let file: File = fileList[0];
-			console.log('file', file);
-			let formData:FormData = new FormData();
-			formData.append('uploads', file, file.name);
-			console.log('formData ANTES', formData.get('uploads'));
-			this._chatService.uploadFile(formData).subscribe(
+	public fileChange(event, microDataMessage) {
+		// var selectedFile: File;
+		var self = this;
+		if (event.target.files.length > 0) {
+			// selectedFile = event.target.files[0];
+
+			let uploadData = new FormData();
+			uploadData.append('uploads[]', event.target.files[0], event.target.files[0].name);
+
+			this._chatService.uploadFile(uploadData).subscribe(
 				result => {
-					console.log('result IMAGEN', result);
+
+					if (result.length > 0) {
+						let microData = [];
+
+						let linkFile = '![' + result[0].name + '](' + this._variableGlobal.apiURLBase + result[0].url + ')';
+						microDataMessage.message = linkFile;
+						self.sendMessage(false, microDataMessage);
+					} else {
+						alert('Ocurrio un problema con el archivo');
+					}
 				}
 			);
-
+			// resetear valor del input file
 		}
 	}
-
 }

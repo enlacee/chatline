@@ -158,7 +158,6 @@
 					padding: 0 0.5em;
 					min-height: 250px;
 					height: 90%;
-					border:1px solid pink;
 					overflow-y: scroll;
 					background-color: white;
 					.message-line{
@@ -166,6 +165,9 @@
 							position: relative;
 							p{
 								margin: 0;
+							}
+							p.author{
+								font-size: 0.54em;
 							}
 							time{
 								font-size: 0.7em;

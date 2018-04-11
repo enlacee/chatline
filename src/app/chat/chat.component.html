@@ -17,13 +17,13 @@
 					<ul class="links-group-chat">
 						<li>
 							<a class="btn btn-link tablinks" href="javascript:void(0)"
-							*ngFor="let item of groupsItems; let i = index"
-							[class.active]="(i == indexGroupSelected)"
-							[attr.data-group-id]="item.id_group"
-							(click)="openTheTab($event, item.id_group); indexGroupSelected = i">{{ item.name }}</a>
+								*ngFor="let item of groupsItems; let i = index"
+								[class.active]="(i == indexGroupSelected)"
+								[attr.data-group-id]="item.id_group"
+								(click)="openTheTab($event, item.id_group); indexGroupSelected = i; setAutoScrollGroup(item.id_group);">{{ item.name }}</a>
 						</li>
 						<li>
-							<a class="btn btn-link tablinks disabled" href="javascript:void(0)">CHAT USER</a>
+							<a class="btn btn-link tablinks disabled" href="javascript:void(0)" style="display: none">Chat user</a>
 						</li>
 					</ul>
 					<hr>
@@ -40,8 +40,8 @@
 
 						<div *ngFor="let messageChat of messagesChat; let i = index" class="message-line">
 							<div *ngIf="groupsItems[indexGroupSelected].id_group == messageChat.message.id_group"
-							[attr.class]="(user.id_user == messageChat.message.id_user ) ? 'iam' : ''">
-								<p><strong>{{ (messageChat.action == 'yo') ? 'Yo' : userDiccinary[messageChat.message.emisor].firstname }}</strong>:</p>
+							[attr.class]="(user.id_user == messageChat.message.emisor) ? 'iam' : ''">
+								<p class="author"><strong>{{ (messageChat.action == 'yo' || user.id_user == messageChat.message.emisor) ? 'Yo' : userDiccinary[messageChat.message.emisor].firstname }}</strong>:</p>
 								<p>{{messageChat.message.message}}</p>
 								<time [attr.datetime]="messageChat.message['at_created']">{{messageChat.message['at_created'] | amDateFormat:'HH:mm'}}</time>
 							</div>
@@ -54,7 +54,16 @@
 									<input type="text" class="form-control" #message required>
 									<div class="input-group-append">
 										<span class="btn btn-danger btn-file">
-											Subir<input type="file" (change)="fileChange($event)" placeholder="Upload file"
+											Subir<input type="file" (change)="fileChange($event, {
+												'emisor': group.id_user,
+												'receptor': group.id_group,
+												'chatType': 'group',
+												'name': user.firstname,
+												'message': '',
+	
+												'id_group': group.id_group
+											})" 
+											placeholder="Upload file" 
 											class="d-none d-sm-block">
 										</span>
 										<button type="submit" class="btn btn-primary d-none d-sm-block"
@@ -76,7 +85,7 @@
 
 				<!-- Crear lista  de cuadros de CHAT personal -->
 				<!-- {{indexUsersTabSelected | json}} -->
-				<div class="group tabcontent" style="border:1px solid rebeccapurple; display:none" id="user-chat">
+				<div class="group tabcontent" style="display:none" id="user-chat">
 					<div class="messages">
 						<div *ngFor="let messageChat of messagesChatUsers; let i = index" class="message-line">
 
@@ -97,7 +106,16 @@
 									<input type="text" class="form-control" #messageUser>
 									<div class="input-group-append">
 										<span class="btn btn-danger btn-file">
-											Subir<input class="d-none d-sm-block" type="file">
+											Subir<input class="d-none d-sm-block" type="file"
+											(change)="fileChange($event, {
+												'emisor': user.id_user,
+												'receptor': indexUsersTabSelected,
+												'chatType': 'user',
+												'name': user.firstname,
+												'message': '',
+	
+												'id_group': 'user-chat'
+											})">
 										</span>
 										<button type="submit" class="btn btn-secondary d-none d-sm-block"
 										(click)="sendMessage($event, {

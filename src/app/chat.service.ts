@@ -82,16 +82,9 @@ export class ChatService {
 	 * subir imagen
 	 * @param medaData
 	 */
-	public uploadFile(formData) {
-		console.log('formData DESPUES', formData.get('uploads'));
-		let headers = new Headers();
-		/** No need to include Content-Type in Angular 4 */
-		headers.append('Content-Type', 'multipart/form-data');
-		headers.append('Accept', 'application/json');
-		// headers.append('Access-Control-Allow-Origin', '*');
-		let options = new RequestOptions({ headers: headers });
+	public uploadFile(uploadData) {
 
-		return this._http.post(this._variableGlobal.apiURL + '/upload-file', formData, options)
+		return this._http.post(this._variableGlobal.apiURL + '/upload-file', uploadData)
 			.map(res => res.json());
 	}
 }
